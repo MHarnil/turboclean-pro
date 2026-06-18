@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import {
   FiMinus, FiPlus, FiCheckCircle, FiAlertCircle,
   FiLoader, FiArrowLeft, FiShield, FiTruck, FiPhone,
@@ -17,12 +16,6 @@ import { MdVerified, MdEmail } from 'react-icons/md';
 import productImg from '../assets/product1.jpg';
 import productImg2 from '../assets/product2.jpg';
 
-// ─── EmailJS Config — Replace with your actual IDs ────────────────────────
-const EMAILJS_SERVICE_ID       = 'service_turboclean'; // Your EmailJS Service ID
-const EMAILJS_TEMPLATE_ID      = 'template_order';     // Seller notification template
-const EMAILJS_CUSTOMER_TMPL    = 'template_confirm';   // Customer confirmation template
-const EMAILJS_PUBLIC_KEY       = 'YOUR_PUBLIC_KEY';    // Your Public Key
-// ──────────────────────────────────────────────────────────────────────────
 
 // Generate unique order number e.g. TCP-230618-4821
 const genOrderId = () => {
@@ -101,73 +94,42 @@ const OrderPage = () => {
     const delivDate   = new Date();
     delivDate.setDate(delivDate.getDate() + 4);
     const deliveryStr = delivDate.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'Asia/Kolkata' });
-    const fullAddress = `${form.address}, ${form.city}, ${form.state} - ${form.pincode}`;
 
-    let awbNumber = '';
+    let awbNumber    = '';
+    let iThinkCreated = false;
 
     try {
-      // Run all 3 in parallel — iThink + Seller Email + Customer Email
-      const [iThinkResult] = await Promise.allSettled([
+      // Single API call — server handles emails + iThink
+      const response = await fetch('/api/create-order', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          customerName: form.fullName,
+          phone:        form.phone,
+          email:        form.email,
+          address:      form.address,
+          city:         form.city,
+          state:        form.state,
+          pincode:      form.pincode,
+          quantity:     qty,
+          totalAmount:  total,
+          orderDate,
+          deliveryDate: deliveryStr,
+        }),
+      });
 
-        // 1️⃣ iThink Logistics — Auto shipment creation
-        fetch('/api/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId,
-            customerName: form.fullName,
-            phone:        form.phone,
-            email:        form.email,
-            address:      form.address,
-            city:         form.city,
-            state:        form.state,
-            pincode:      form.pincode,
-            quantity:     qty,
-            totalAmount:  total,
-            orderDate,
-          }),
-        }).then(r => r.json()),
+      const result = await response.json();
+      awbNumber    = result.awbNumber    || '';
+      iThinkCreated = result.iThinkCreated || false;
 
-        // 2️⃣ Seller notification email
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-          to_email:      'starlight6114@gmail.com',
-          order_id:      orderId,
-          customer_name: form.fullName,
-          phone:         form.phone,
-          alt_phone:     form.altPhone || 'Not provided',
-          email:         form.email,
-          address:       fullAddress,
-          quantity:      qty,
-          total_amount:  `₹${total}`,
-          order_date:    orderDate,
-        }, EMAILJS_PUBLIC_KEY).catch(() => {}),
-
-        // 3️⃣ Customer confirmation email
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CUSTOMER_TMPL, {
-          to_email:      form.email,
-          order_id:      orderId,
-          customer_name: form.fullName,
-          phone:         form.phone,
-          address:       fullAddress,
-          quantity:      qty,
-          total_amount:  `₹${total}`,
-          order_date:    orderDate,
-          delivery_date: deliveryStr,
-        }, EMAILJS_PUBLIC_KEY).catch(() => {}),
-      ]);
-
-      // Extract AWB from iThink response (if success)
-      if (iThinkResult.status === 'fulfilled' && iThinkResult.value?.success) {
-        awbNumber = iThinkResult.value.awbNumber || '';
-      }
-
-      // Save order data for success page
       setOrderData({
-        orderId, orderDate, deliveryStr, fullAddress, awbNumber,
-        name: form.fullName, phone: form.phone,
-        email: form.email, qty, total,
-        city: form.city, state: form.state, pincode: form.pincode,
-        iThinkCreated: iThinkResult.status === 'fulfilled' && iThinkResult.value?.success,
+        orderId, orderDate, deliveryStr,
+        fullAddress: `${form.address}, ${form.city}, ${form.state} - ${form.pincode}`,
+        awbNumber, iThinkCreated,
+        name:  form.fullName, phone: form.phone,
+        email: form.email,   qty,   total,
+        city:  form.city, state: form.state, pincode: form.pincode,
       });
       setStatus('success');
       window.scrollTo({ top: 0, behavior: 'smooth' });

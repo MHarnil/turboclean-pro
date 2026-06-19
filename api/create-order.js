@@ -165,6 +165,7 @@ export default async function handler(req, res) {
         data: {
           access_token:   ITHINK_TOKEN,
           secret_key:     ITHINK_SECRET,
+          logistics:      'Surface',
           order:          orderId,
           order_date:     orderDate,
           auto_pickup:    '1',

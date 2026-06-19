@@ -172,7 +172,7 @@ export default async function handler(req, res) {
         data: {
           access_token:      ITHINK_TOKEN,
           secret_key:        ITHINK_SECRET,
-          pickup_address_id: '117758',
+          pickup_address_id: '117756',
           logistics:         '',   // auto-select by iThink
           s_type:            '',
           order_type:        '',   // forward (default)
@@ -220,7 +220,7 @@ export default async function handler(req, res) {
             eway_bill_number: '',
             gst_number:     '',
             what3words:     '',
-            return_address_id: '117758',
+            return_address_id: '117756',
             api_source:     '1',
           }],
         },

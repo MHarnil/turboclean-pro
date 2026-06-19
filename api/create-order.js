@@ -161,52 +161,62 @@ export default async function handler(req, res) {
 
   if (ITHINK_TOKEN && ITHINK_SECRET) {
     try {
+      // Format date as DD-MM-YYYY as per iThink docs
+      const now = new Date();
+      const dd  = String(now.getDate()).padStart(2, '0');
+      const mm  = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const iThinkDate = `${dd}-${mm}-${yyyy}`;
+
       const iPayload = {
         data: {
-          access_token:   ITHINK_TOKEN,
-          secret_key:     ITHINK_SECRET,
-          order:          orderId,
-          order_date:     orderDate,
-          auto_pickup:    '1',
-          payment_type:   'cod',
-          total_amount:   String(totalAmount),
-          collect_amount: String(totalAmount),
-          cod_amount:     String(totalAmount),
-          height: '8', breadth: '10', length: '20', weight: '0.5',
-          seller_name: 'TurboClean Pro',
-          seller_inv:  orderId,
+          access_token:      ITHINK_TOKEN,
+          secret_key:        ITHINK_SECRET,
           pickup_address_id: '117758',
+          logistics:         '',   // auto-select by iThink
+          s_type:            '',
+          order_type:        '',   // forward (default)
           shipments: [{
-            logistics:                     'Surface',
-            service_type:                  'Surface',
-            forward_shipment:              '1',
-            is_billing_same_as_shipping:   'yes',
-            name:           customerName,
-            add:            address,
-            city:           city,
-            state:          state,
-            country:        'India',
-            pin:            String(pincode),
-            phone:          String(phone),
-            order:          orderId,
-            payment_type:   'cod',
-            collect_amount: String(totalAmount),
-            total_amount:   String(totalAmount),
-            cod_amount:     String(totalAmount),
-            email:          email || '',
-            products_desc:  `TurboClean Pro x${quantity}`,
-            order_date:     orderDate,
-            pieces:         String(quantity),
-            weight:         String(0.5 * quantity),
-            height: '8', breadth: '10', length: '20',
-            seller_name:    'TurboClean Pro',
-            seller_inv:     orderId,
-            quantity:       String(quantity),
+            order:      orderId,
+            order_date: iThinkDate,
+            total_amount: String(totalAmount),
+            name:     customerName,
+            add:      address,
+            pin:      String(pincode),
+            city:     city,
+            state:    state,
+            country:  'India',
+            phone:    String(phone),
+            email:    email || '',
+            is_billing_same_as_shipping: 'yes',
+            products: [{
+              product_name:     'TurboClean Pro',
+              product_sku:      'TCP-001',
+              product_quantity: String(quantity),
+              product_price:    String(totalAmount),
+              product_tax_rate: '0',
+              product_discount: '0',
+            }],
+            shipment_length: '20',
+            shipment_width:  '10',
+            shipment_height: '8',
+            weight:          String(0.5 * quantity),
+            shipping_charges:    '0',
+            giftwrap_charges:    '0',
+            transaction_charges: '0',
+            total_discount:      '0',
+            cod_charges:         '0',
+            advance_amount:      '0',
+            cod_amount:          String(totalAmount),
+            payment_mode:        'COD',
+            return_address_id:   '117758',
+            api_source:          '1',
           }],
         },
       };
 
-      console.log('📤 Sending to iThink:', JSON.stringify(iPayload).slice(0, 300));
+      console.log('📤 Sending to iThink:', JSON.stringify(iPayload).slice(0, 500));
+
 
       const iRes  = await fetch('https://my.ithinklogistics.com/api_v3/order/add.json', {
         method:  'POST',

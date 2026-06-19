@@ -152,53 +152,80 @@ export default async function handler(req, res) {
     customerError = 'No email provided';
   }
 
-  // ── iThink Logistics (optional) ─────────────────────────────────────────
+  // ── iThink Logistics ────────────────────────────────────────────────────
   let awbNumber    = '';
   let iThinkCreated = false;
+  let iThinkError  = '';
+
+  console.log('🔑 iThink creds present:', !!ITHINK_TOKEN, !!ITHINK_SECRET);
 
   if (ITHINK_TOKEN && ITHINK_SECRET) {
     try {
-      const iRes = await fetch('https://my.ithinklogistics.com/api_v3/order/add.json', {
+      const iPayload = {
+        data: {
+          security_token: ITHINK_TOKEN,
+          secret_key:     ITHINK_SECRET,
+          order:          orderId,
+          order_date:     orderDate,
+          auto_pickup:    '1',
+          payment_type:   'cod',
+          total_amount:   String(totalAmount),
+          collect_amount: String(totalAmount),
+          height: '8', breadth: '10', length: '20', weight: '0.5',
+          seller_name: 'TurboClean Pro',
+          seller_inv:  orderId,
+          shipments: [{
+            name:           customerName,
+            add:            address,
+            city:           city,
+            state:          state,
+            country:        'India',
+            pin:            String(pincode),
+            phone:          String(phone),
+            order:          orderId,
+            payment_type:   'cod',
+            collect_amount: String(totalAmount),
+            total_amount:   String(totalAmount),
+            email:          email || '',
+            products_desc:  `TurboClean Pro x${quantity}`,
+            cod_amount:     String(totalAmount),
+            order_date:     orderDate,
+            pieces:         String(quantity),
+            weight:         String(0.5 * quantity),
+            height: '8', breadth: '10', length: '20',
+            seller_name:    'TurboClean Pro',
+            seller_inv:     orderId,
+            quantity:       String(quantity),
+          }],
+        },
+      };
+
+      console.log('📤 Sending to iThink:', JSON.stringify(iPayload).slice(0, 300));
+
+      const iRes  = await fetch('https://my.ithinklogistics.com/api_v3/order/add.json', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          data: {
-            security_token: ITHINK_TOKEN,
-            secret_key:     ITHINK_SECRET,
-            order:          orderId,
-            order_date:     orderDate,
-            auto_pickup:    '1',
-            payment_type:   'cod',
-            total_amount:   totalAmount,
-            collect_amount: totalAmount,
-            height: '8', breadth: '10', length: '20', weight: '0.5',
-            seller_name: 'TurboClean Pro',
-            seller_inv:  orderId,
-            shipments: [{
-              name: customerName, add: address, city, state,
-              country: 'India', pin: pincode, phone,
-              order: orderId, payment_type: 'cod',
-              collect_amount: totalAmount, total_amount: totalAmount,
-              email: email || '',
-              products_desc: `TurboClean Pro x${quantity}`,
-              cod_amount: totalAmount, order_date: orderDate,
-              pieces: quantity, weight: (0.5 * quantity).toString(),
-              height: '8', breadth: '10', length: '20',
-              seller_name: 'TurboClean Pro', seller_inv: orderId,
-              quantity: quantity.toString(),
-            }],
-          },
-        }),
+        body:    JSON.stringify(iPayload),
       });
-      const iData = await iRes.json();
+
+      const iText = await iRes.text();
+      console.log('📥 iThink raw response (status', iRes.status, '):', iText.slice(0, 500));
+
+      const iData = JSON.parse(iText);
       if (iData.status === 'true' || iData.status === true) {
         iThinkCreated = true;
-        awbNumber = iData.data?.awb_number || iData.data?.[0]?.awb_number || '';
-        console.log('✅ iThink shipment created, AWB:', awbNumber);
+        awbNumber     = iData.data?.awb_number || iData.data?.[0]?.awb_number || '';
+        console.log('✅ iThink shipment created! AWB:', awbNumber);
+      } else {
+        iThinkError = iData.message || iData.error || JSON.stringify(iData);
+        console.error('❌ iThink rejected order:', iThinkError);
       }
     } catch (err) {
-      console.log('⚠️ iThink skipped:', err.message);
+      iThinkError = err.message;
+      console.error('❌ iThink exception:', err.message);
     }
+  } else {
+    console.warn('⚠️ iThink credentials missing — skipping');
   }
 
   return res.status(200).json({

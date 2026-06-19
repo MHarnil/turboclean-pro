@@ -198,7 +198,7 @@ export default async function handler(req, res) {
             products: [{
               product_name:     'TurboClean Pro',
               product_sku:      'TCP-001',
-              product_quantity: String(quantity),
+              product_quantity: '1',
               product_price:    String(totalAmount),
               product_tax_rate: '0',
               product_discount: '0',

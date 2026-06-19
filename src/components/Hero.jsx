@@ -1,15 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaShieldAlt, FaTruck, FaStar, FaLock, FaPhone } from 'react-icons/fa';
 import CountdownTimer from './CountdownTimer';
 
-// Import product images
+// All product images
 import productImg1 from '../assets/product1.jpg';
+import productImg2 from '../assets/product2.jpg';
+import productImg3 from '../assets/product3.jpg';
+import imgBattery  from '../assets/img-battery.jpg';
+import imgFilter   from '../assets/img-filter.jpg';
+import imgCompare  from '../assets/img-comparison.jpg';
+import imgBlower   from '../assets/img-blower.jpg';
+import imgSize     from '../assets/img-features.jpg';
+
+const heroImgs = [
+  { src: productImg1, label: 'Product' },
+  { src: productImg2, label: 'Uses' },
+  { src: imgBlower,   label: 'Blower' },
+  { src: imgCompare,  label: 'Modes' },
+  { src: productImg3, label: 'Charging' },
+  { src: imgBattery,  label: 'Battery' },
+  { src: imgFilter,   label: 'Filter' },
+  { src: imgSize,     label: 'Size' },
+];
 
 const Hero = () => {
   const navigate = useNavigate();
   const scrollToOrder = () => navigate('/order');
+  const [activeImg, setActiveImg] = useState(0);
+
+  // Auto-rotate every 3.5 seconds
+  useEffect(() => {
+    const t = setInterval(() => setActiveImg(p => (p + 1) % heroImgs.length), 3500);
+    return () => clearInterval(t);
+  }, []);
 
   const badges = [
     { icon: '🔥', text: 'Limited Stock', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
@@ -176,19 +201,46 @@ const Hero = () => {
               <div className="absolute inset-0 rounded-full bg-sky-500/20 blur-3xl scale-110 animate-pulse-slow" />
               <div className="absolute inset-8 rounded-full bg-blue-400/10 blur-2xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
-              {/* Product Image */}
+              {/* Product Image Gallery */}
               <motion.div
-                animate={{ y: [0, -15, 0] }}
+                animate={{ y: [0, -12, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                 className="relative z-10"
               >
                 <div className="relative">
-                  <img
-                    src={productImg1}
-                    alt="TurboClean Pro - Portable Electric Dust Blower & Vacuum Cleaner"
-                    className="w-full max-w-md mx-auto drop-shadow-2xl rounded-3xl"
-                    style={{ filter: 'drop-shadow(0 0 40px rgba(14,165,233,0.4))' }}
-                  />
+                  {/* Main rotating image */}
+                  <div className="relative w-full max-w-md mx-auto overflow-hidden rounded-3xl" style={{ minHeight: '280px' }}>
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={activeImg}
+                        src={heroImgs[activeImg].src}
+                        alt="TurboClean Pro"
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.04 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-full object-contain rounded-3xl"
+                        style={{ filter: 'drop-shadow(0 0 40px rgba(14,165,233,0.4))', maxHeight: '340px' }}
+                      />
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Thumbnail strip */}
+                  <div className="flex justify-center gap-1.5 mt-3 flex-wrap px-2">
+                    {heroImgs.map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setActiveImg(i)}
+                        className={`w-9 h-9 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 ${
+                          i === activeImg
+                            ? 'border-sky-400 scale-110 shadow-[0_0_8px_rgba(56,189,248,0.6)]'
+                            : 'border-white/20 hover:border-white/50 opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={img.src} alt={img.label} className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
 
                   {/* Floating feature badges */}
                   <motion.div

@@ -12,9 +12,17 @@ import {
 } from 'react-icons/fa';
 import { MdVerified, MdEmail } from 'react-icons/md';
 
-// Product images
-import productImg from '../assets/product1.jpg';
+// Product images — all 7
+import productImg  from '../assets/product1.jpg';
 import productImg2 from '../assets/product2.jpg';
+import productImg3 from '../assets/product3.jpg';
+import productImg4 from '../assets/product4.jpg';
+import productImg5 from '../assets/product5.jpg';
+import imgBattery  from '../assets/img-battery.jpg';
+import imgFilter   from '../assets/img-filter.jpg';
+import imgCompare  from '../assets/img-comparison.jpg';
+import imgBlower   from '../assets/img-blower.jpg';
+import imgSize     from '../assets/img-features.jpg';
 
 
 // Generate unique order number e.g. TCP-230618-4821
@@ -169,7 +177,19 @@ const OrderPage = () => {
         : 'border-white/15 focus:border-sky-500'
     }`;
 
-  const imgs = [productImg, productImg2];
+  // Gallery: Main product first, then feature images
+  const imgs = [
+    productImg,   // Main product + all attachments
+    productImg2,  // Multi-use: Car, Travel, Office, Home
+    productImg3,  // Quick charging + Type-C USB
+    imgBattery,   // 2000mAh battery specs
+    imgFilter,    // Washable filter
+    imgCompare,   // Vacuum vs Blower comparison
+    imgBlower,    // In-car usage
+    productImg4,  // Package contents
+    imgSize,      // Size specs
+    productImg5,  // Clean side shot
+  ];
 
   /* ── SUCCESS PAGE ─────────────────────────────────────────────────────── */
   if (status === 'success' && orderData) {

@@ -187,6 +187,7 @@ export default async function handler(req, res) {
             state:    state,
             country:  'India',
             phone:    String(phone),
+            alt_phone: String(phone),
             email:    email || '',
             is_billing_same_as_shipping: 'yes',
             products: [{

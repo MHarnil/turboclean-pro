@@ -110,7 +110,7 @@ const StoreFront = () => {
                 className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start"
               >
                 <button
-                  onClick={scrollToCatalog}
+                  onClick={() => navigate('/product/turboclean')}
                   className="btn-blue px-8 py-4 text-base font-bold flex items-center justify-center gap-2 rounded-xl"
                 >
                   Shop Now <FiArrowRight />

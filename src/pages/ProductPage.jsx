@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import OrderModal from '../components/OrderModal';
 import {
-  FiTruck, FiShield, FiStar, FiCheck, FiChevronDown,
-  FiPackage, FiZap, FiWind,
+  FiTruck, FiShield, FiCheck, FiChevronDown,
+  FiPackage, FiZap, FiWind, FiChevronLeft, FiChevronRight,
 } from 'react-icons/fi';
 import { FaBatteryFull } from 'react-icons/fa';
 
@@ -32,17 +32,22 @@ const faqs = [
 
 const ProductPage = () => {
   const [selectedPack, setSelectedPack] = useState(1);
-  const [activeImage, setActiveImage] = useState(productImg1);
+  const [activeImg, setActiveImg] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const sliderRef = useRef(null);
+
+  // Scroll to top when page loads
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   const currentPrice = PRICING[selectedPack];
   const currentMrp   = MRP[selectedPack];
   const discount     = Math.round(((currentMrp - currentPrice) / currentMrp) * 100);
 
-  const handlePackSelect = (pack) => {
-    setSelectedPack(pack);
-  };
+  const slideLeft  = () => sliderRef.current?.scrollBy({ left: -80, behavior: 'smooth' });
+  const slideRight = () => sliderRef.current?.scrollBy({ left:  80, behavior: 'smooth' });
+
+  const handlePackSelect = (pack) => { setSelectedPack(pack); };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -60,19 +65,19 @@ const ProductPage = () => {
       </div>
 
       {/* ── PRODUCT TOP SECTION ───────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex flex-col lg:flex-row">
 
             {/* Left: Gallery */}
-            <div className="lg:w-1/2 p-6">
+            <div className="lg:w-1/2 p-3 md:p-4">
               {/* TurboClean Pro Brand Badge */}
-              <div className="flex items-center gap-2 mb-5">
-                <div className="flex items-center gap-2 bg-[#34367f] text-white px-4 py-2 rounded-xl">
-                  <FiZap size={16} className="text-blue-200" />
-                  <span className="font-black text-sm tracking-wider">TURBOCLEAN PRO</span>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 bg-[#34367f] text-white px-3 py-1.5 rounded-lg">
+                  <FiZap size={14} className="text-blue-200" />
+                  <span className="font-black text-xs tracking-wider">TURBOCLEAN PRO</span>
                 </div>
-                <div className="flex items-center gap-1 bg-orange-100 text-orange-600 px-3 py-1.5 rounded-xl text-xs font-bold">
+                <div className="flex items-center gap-1 bg-orange-100 text-orange-600 px-2.5 py-1 rounded-lg text-xs font-bold">
                   🔥 BEST SELLER
                 </div>
               </div>
@@ -80,32 +85,47 @@ const ProductPage = () => {
               {/* Main Image */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activeImage}
+                  key={activeImg}
                   initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.02 }}
                   transition={{ duration: 0.25 }}
-                  className="border-2 border-gray-100 rounded-2xl overflow-hidden flex justify-center items-center p-4 h-80 md:h-96 bg-gray-50 mb-4"
+                  className="border border-gray-100 rounded-xl overflow-hidden flex justify-center items-center bg-gray-50 mb-3"
+                  style={{ height: '420px' }}
                 >
-                  <img src={activeImage} alt="TurboClean Pro" className="max-h-full object-contain" />
+                  <img src={thumbnails[activeImg]} alt="TurboClean Pro" className="w-full h-full object-contain p-2" />
                 </motion.div>
               </AnimatePresence>
 
-              {/* Thumbnails */}
-              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                {thumbnails.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImage(img)}
-                    className={`flex-shrink-0 border-2 rounded-xl overflow-hidden w-16 h-16 transition-all ${
-                      activeImage === img
-                        ? 'border-[#34367f] shadow-md scale-105'
-                        : 'border-gray-200 opacity-60 hover:opacity-100 hover:border-gray-400'
-                    }`}
-                  >
-                    <img src={img} alt={`View ${i+1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
+              {/* Sliding Thumbnails with arrows */}
+              <div className="relative flex items-center gap-1">
+                <button
+                  onClick={slideLeft}
+                  className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-100 hover:bg-[#34367f] hover:text-white flex items-center justify-center transition-colors"
+                >
+                  <FiChevronLeft size={16} />
+                </button>
+                <div ref={sliderRef} className="flex gap-2 overflow-x-auto no-scrollbar flex-1 py-1">
+                  {thumbnails.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className={`flex-shrink-0 border-2 rounded-lg overflow-hidden w-16 h-16 transition-all ${
+                        activeImg === i
+                          ? 'border-[#34367f] shadow-md scale-105'
+                          : 'border-gray-200 opacity-60 hover:opacity-100 hover:border-gray-400'
+                      }`}
+                    >
+                      <img src={img} alt={`View ${i+1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={slideRight}
+                  className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-100 hover:bg-[#34367f] hover:text-white flex items-center justify-center transition-colors"
+                >
+                  <FiChevronRight size={16} />
+                </button>
               </div>
             </div>
 

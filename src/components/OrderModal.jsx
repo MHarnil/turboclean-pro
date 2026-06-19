@@ -47,6 +47,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
     if (!form.fullName.trim()) err.fullName = 'Full name is required';
     if (!/^[6-9]\d{9}$/.test(form.phone)) err.phone = 'Enter valid 10-digit number';
     if (!form.address.trim()) err.address = 'Complete address is required';
+    if (!form.landmark.trim()) err.landmark = 'Landmark is required';
     if (!form.city.trim()) err.city = 'City is required';
     if (!/^\d{6}$/.test(form.pincode)) err.pincode = 'Enter 6-digit pincode';
     return err;
@@ -116,22 +117,24 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
             <button onClick={onClose} className="p-2"><FiX size={24} /></button>
           </div>
           <FiCheckCircle size={64} className="text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Order Confirmed!</h2>
-          <p className="text-gray-600 mb-6">Thank you, {orderData.name}!</p>
-          
-          <div className="bg-gray-50 border rounded p-4 mb-6 text-left">
+          <h2 className="text-2xl font-bold text-gray-800 mb-1">Order Confirmed! 🎉</h2>
+          <p className="text-gray-600 mb-2">Thank you, {orderData.name}!</p>
+          <p className="text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 mb-5">
+            📧 Order confirmation <strong>aapke email mein bheja ja raha hai</strong>.<br />
+            <span className="text-xs text-gray-500">Agar inbox mein nahi dikh raha to <strong>Spam / Junk</strong> folder check karein.</span>
+          </p>
+          <div className="bg-gray-50 border rounded-lg p-4 mb-6 text-left">
             <p className="text-sm text-gray-500 font-semibold mb-1">Your Order ID</p>
             <div className="flex items-center justify-between">
               <span className="font-bold text-xl text-blue-600">{orderData.orderId}</span>
               <button onClick={copyOrderId} className="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded flex items-center gap-1">
-                {copied ? 'Copied' : <><FiCopy /> Copy</>}
+                {copied ? 'Copied ✓' : <><FiCopy /> Copy</>}
               </button>
             </div>
-            <p className="text-sm text-gray-500 mt-4">Amount to Pay (COD): <span className="font-bold">₹{orderData.total}</span></p>
-            <p className="text-sm text-gray-500">Expected Delivery: <span className="font-bold">{orderData.deliveryStr}</span></p>
+            <p className="text-sm text-gray-500 mt-3">Amount to Pay (COD): <span className="font-bold text-gray-800">₹{orderData.total}</span></p>
+            <p className="text-sm text-gray-500">Expected Delivery: <span className="font-bold text-gray-800">{orderData.deliveryStr}</span></p>
           </div>
-
-          <button onClick={onClose} className="btn-blue">Continue Shopping</button>
+          <button onClick={onClose} className="btn-blue w-full">Continue Shopping</button>
         </div>
       </div>
     );
@@ -179,7 +182,8 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
           </div>
 
           <div>
-            <input type="text" name="landmark" value={form.landmark} onChange={change} className="input-field" placeholder="Landmark (Optional)" />
+            <input type="text" name="landmark" value={form.landmark} onChange={change} className={`input-field ${errors.landmark ? 'border-red-500' : ''}`} placeholder="Near- (Landmark / Near by location)" />
+            {errors.landmark && <p className="text-red-500 text-xs mt-1">{errors.landmark}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">

@@ -12,7 +12,7 @@ import imgCompare  from '../assets/img-comparison.jpg';
 import imgBlower   from '../assets/img-blower.jpg';
 import imgSize     from '../assets/img-features.jpg';
 
-const HomePage = () => {
+const ProductPage = () => {
   const [selectedPack, setSelectedPack] = useState(1);
   const [activeImage, setActiveImage] = useState(productImg1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -159,4 +159,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ProductPage;

@@ -16,8 +16,9 @@ const Navbar = () => {
           {/* Center: Logo */}
           <div className="flex-shrink-0 flex items-center justify-center font-bold text-2xl tracking-widest uppercase">
             <a href="/" className="flex items-center">
-              <span className="font-light">HOME</span>
-              <span className="ml-2 font-black">PICKSS</span>
+              <span className="font-light text-blue-300">E</span>
+              <span className="mx-1 text-gray-300">-</span>
+              <span className="font-black tracking-tight">RUUP</span>
             </a>
           </div>
 

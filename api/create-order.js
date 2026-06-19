@@ -163,7 +163,7 @@ export default async function handler(req, res) {
     try {
       const iPayload = {
         data: {
-          security_token: ITHINK_TOKEN,
+          access_token:   ITHINK_TOKEN,
           secret_key:     ITHINK_SECRET,
           order:          orderId,
           order_date:     orderDate,

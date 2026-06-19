@@ -175,6 +175,7 @@ export default async function handler(req, res) {
           height: '8', breadth: '10', length: '20', weight: '0.5',
           seller_name: 'TurboClean Pro',
           seller_inv:  orderId,
+          pickup_address_id: '117758',
           shipments: [{
             logistics:                     'Surface',
             service_type:                  'Surface',

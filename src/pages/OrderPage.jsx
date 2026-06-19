@@ -141,6 +141,17 @@ const OrderPage = () => {
       });
       setStatus('success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 🎯 Meta Pixel — Purchase event (fires when order is placed)
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Purchase', {
+          value:    total,
+          currency: 'INR',
+          content_name: 'TurboClean Pro',
+          content_ids:  ['TCP-001'],
+          num_items: qty,
+        });
+      }
     } catch {
       setStatus('error');
     }

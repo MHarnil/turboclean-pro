@@ -161,23 +161,21 @@ export default async function handler(req, res) {
 
   if (ITHINK_TOKEN && ITHINK_SECRET) {
     try {
-      // Format date as DD-MM-YYYY as per iThink docs
+      // Format date as DD-MM-YYYY HH:mm:ss as per iThink sync docs
       const now = new Date();
       const dd  = String(now.getDate()).padStart(2, '0');
       const mm  = String(now.getMonth() + 1).padStart(2, '0');
       const yyyy = now.getFullYear();
-      const iThinkDate = `${dd}-${mm}-${yyyy}`;
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      const iThinkDate = `${dd}-${mm}-${yyyy} ${hh}:${min}:${ss}`;
 
       const iPayload = {
         data: {
           access_token:      ITHINK_TOKEN,
           secret_key:        ITHINK_SECRET,
-          pickup_address_id: '117756',
-          logistics:         '',   // auto-select by iThink
-          s_type:            '',
-          order_type:        '',   // forward (default)
           shipments: [{
-            waybill:    '',
             order:      orderId,
             sub_order:  '',
             order_date: iThinkDate,
@@ -195,12 +193,25 @@ export default async function handler(req, res) {
             alt_phone: String(phone),
             email:    email || '',
             is_billing_same_as_shipping: 'yes',
+            billing_name: customerName,
+            billing_company_name: '',
+            billing_add: address,
+            billing_add2: '',
+            billing_add3: '',
+            billing_pin: String(pincode),
+            billing_city: city,
+            billing_state: state,
+            billing_country: 'India',
+            billing_phone: String(phone),
+            billing_alt_phone: String(phone),
+            billing_email: email || '',
             products: [{
               product_name:     'TurboClean Pro',
               product_sku:      'TCP-001',
               product_quantity: '1',
               product_price:    String(totalAmount),
               product_tax_rate: '0',
+              product_hsn_code: '',
               product_discount: '0',
             }],
             shipment_length: '20',
@@ -219,9 +230,6 @@ export default async function handler(req, res) {
             reseller_name:  '',
             eway_bill_number: '',
             gst_number:     '',
-            what3words:     '',
-            return_address_id: '117756',
-            api_source:     '1',
           }],
         },
       };
@@ -229,7 +237,7 @@ export default async function handler(req, res) {
       console.log('📤 Sending to iThink:', JSON.stringify(iPayload).slice(0, 500));
 
 
-      const iRes  = await fetch('https://my.ithinklogistics.com/api_v3/order/add.json', {
+      const iRes  = await fetch('https://my.ithinklogistics.com/api_v3/order/sync.json', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(iPayload),

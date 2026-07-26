@@ -59,8 +59,9 @@ const OrderPage = () => {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle|loading|success|error
   const [activeImg, setActiveImg] = useState(0);
-  const [orderData, setOrderData] = useState(null); // saved after success
+  const [orderData, setOrderData] = useState(null);
   const [copied, setCopied]       = useState(false);
+  const [pincodeLoading, setPincodeLoading] = useState(false);
 
   const total   = qty * PRICE;
   const savings = qty * (MRP - PRICE);
@@ -69,6 +70,21 @@ const OrderPage = () => {
     const { name, value } = e.target;
     setForm(p => ({ ...p, [name]: value }));
     if (errors[name]) setErrors(p => ({ ...p, [name]: '' }));
+    // Auto-fill city & state from pincode
+    if (name === 'pincode' && /^\d{6}$/.test(value)) {
+      setPincodeLoading(true);
+      fetch(`https://api.postalpincode.in/pincode/${value}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data[0]?.Status === 'Success') {
+            const po = data[0].PostOffice[0];
+            setForm(p => ({ ...p, city: po.District, state: po.State }));
+            setErrors(p => ({ ...p, city: '', state: '' }));
+          }
+        })
+        .catch(() => {})
+        .finally(() => setPincodeLoading(false));
+    }
   };
 
   const validate = () => {
@@ -760,8 +776,13 @@ const OrderPage = () => {
                     </div>
                     <div data-err={errors.pincode||undefined}>
                       <label className="block text-white/50 text-xs font-medium mb-1">Pincode *</label>
-                      <input type="text" name="pincode" value={form.pincode} onChange={change}
-                        placeholder="400001" maxLength={6} className={field('pincode')} />
+                      <div className="relative">
+                        <input type="text" name="pincode" value={form.pincode} onChange={change}
+                          placeholder="400001" maxLength={6} className={field('pincode')} />
+                        {pincodeLoading && (
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sky-400 text-xs animate-pulse">⏳</span>
+                        )}
+                      </div>
                       {errors.pincode && <p className="text-red-400 text-xs mt-1">⚠ {errors.pincode}</p>}
                     </div>
                   </div>

@@ -759,6 +759,25 @@ const OrderPage = () => {
                 </h3>
                 <div className="space-y-3">
 
+                  {/* Pincode FIRST — auto-fills city & state */}
+                  <div data-err={errors.pincode||undefined}>
+                    <label className="block text-white/50 text-xs font-medium mb-1 flex items-center gap-2">
+                      Pincode *
+                      {!pincodeLoading && form.city && (
+                        <span className="text-emerald-400 text-xs font-semibold">✓ Auto-filled</span>
+                      )}
+                      {pincodeLoading && (
+                        <span className="text-sky-400 text-xs animate-pulse">⏳ Searching...</span>
+                      )}
+                    </label>
+                    <div className="relative">
+                      <input type="text" name="pincode" value={form.pincode} onChange={change}
+                        placeholder="Enter 6-digit pincode → City & State auto-fill" maxLength={6}
+                        className={field('pincode')} />
+                    </div>
+                    {errors.pincode && <p className="text-red-400 text-xs mt-1">⚠ {errors.pincode}</p>}
+                  </div>
+
                   <div data-err={errors.address||undefined}>
                     <label className="block text-white/50 text-xs font-medium mb-1">Complete Address *</label>
                     <textarea name="address" value={form.address} onChange={change}
@@ -769,25 +788,28 @@ const OrderPage = () => {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div data-err={errors.city||undefined}>
-                      <label className="block text-white/50 text-xs font-medium mb-1">City *</label>
+                      <label className="block text-white/50 text-xs font-medium mb-1 flex items-center gap-1">
+                        City *
+                        {form.city && !pincodeLoading && <span className="text-emerald-400 text-xs">✓</span>}
+                      </label>
                       <input type="text" name="city" value={form.city} onChange={change}
-                        placeholder="Mumbai" className={field('city')} />
+                        placeholder="Auto-filled from pincode"
+                        className={`${field('city')} ${form.city ? 'border-emerald-500/50' : ''}`} />
                       {errors.city && <p className="text-red-400 text-xs mt-1">⚠ {errors.city}</p>}
                     </div>
-                    <div data-err={errors.pincode||undefined}>
-                      <label className="block text-white/50 text-xs font-medium mb-1">Pincode *</label>
-                      <div className="relative">
-                        <input type="text" name="pincode" value={form.pincode} onChange={change}
-                          placeholder="400001" maxLength={6} className={field('pincode')} />
-                        {pincodeLoading && (
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sky-400 text-xs animate-pulse">⏳</span>
-                        )}
-                      </div>
-                      {errors.pincode && <p className="text-red-400 text-xs mt-1">⚠ {errors.pincode}</p>}
+                    <div data-err={errors.state||undefined}>
+                      <label className="block text-white/50 text-xs font-medium mb-1 flex items-center gap-1">
+                        State *
+                        {form.state && !pincodeLoading && <span className="text-emerald-400 text-xs">✓</span>}
+                      </label>
+                      <input type="text" name="state" value={form.state} onChange={change}
+                        placeholder="Auto-filled from pincode"
+                        className={`${field('state')} ${form.state ? 'border-emerald-500/50' : ''}`} />
+                      {errors.state && <p className="text-red-400 text-xs mt-1">⚠ {errors.state}</p>}
                     </div>
                   </div>
 
-                  <div data-err={errors.state||undefined}>
+                  <div data-err={errors.state||undefined} style={{display:'none'}}>
                     <label className="block text-white/50 text-xs font-medium mb-1">State *</label>
                     <select name="state" value={form.state} onChange={change}
                       className={`${field('state')} custom-select`}>

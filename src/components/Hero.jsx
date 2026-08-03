@@ -44,7 +44,7 @@ const Hero = () => {
   ];
 
   const trustPoints = [
-    { icon: <FaStar className="text-yellow-400" />, text: '4.8★ Rating' },
+    { icon: <FaStar className="text-yellow-400" />, text: '4.4★ Rating' },
     { icon: <FaShieldAlt className="text-sky-400" />, text: '100% Safe' },
     { icon: <FaTruck className="text-green-400" />, text: 'Fast Delivery' },
     { icon: <FaLock className="text-purple-400" />, text: 'Secure Order' },
@@ -279,7 +279,7 @@ const Hero = () => {
         >
           {[
             { value: '5000+', label: 'Happy Customers' },
-            { value: '4.8★', label: 'Average Rating' },
+            { value: '4.4★', label: 'Average Rating' },
             { value: '1200Pa', label: 'Suction Power' },
             { value: '2400mAh', label: 'Battery Capacity' },
           ].map((stat, i) => (

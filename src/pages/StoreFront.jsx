@@ -28,8 +28,8 @@ const products = [
     description: '91000RPM powerful suction & blowing. Perfect for your car, keyboard, and home.',
     price: 699,
     mrp: 1999,
-    rating: 4.8,
-    reviews: 1247,
+    rating: 4.4,
+    reviews: 728,
     badge: 'BEST SELLER',
     badgeColor: 'bg-orange-500',
     img: productImg1,
@@ -39,7 +39,7 @@ const products = [
 
 const trustItems = [
   { icon: <FiTruck size={28} />, title: 'Free Shipping', sub: 'On every order' },
-  { icon: <FiStar size={28} />, title: '4.8★ Rated', sub: '1200+ reviews' },
+  { icon: <FiStar size={28} />, title: '4.4★ Rated', sub: '728+ reviews' },
   { icon: <FiShield size={28} />, title: '100% Safe', sub: 'Secure payments' },
   { icon: <FiRefreshCw size={28} />, title: 'Easy Returns', sub: '7-day policy' },
   { icon: <FiAward size={28} />, title: 'Genuine Product', sub: 'Quality assured' },
@@ -49,7 +49,7 @@ const trustItems = [
 const marqueeItems = [
   '🚚 FREE SHIPPING on all orders',
   '✅ Cash on Delivery available',
-  '⭐ 4.8/5 Customer Rating',
+  '⭐ 4.4/5 Customer Rating',
   '🛡️ 100% Genuine Products',
   '📦 3–5 Day Fast Delivery',
   '🔥 Limited Stock – Order Now!',
@@ -131,7 +131,7 @@ const StoreFront = () => {
               >
                 <div className="text-sm text-gray-400 flex items-center gap-1"><FiTruck className="text-blue-300" /> Free Delivery</div>
                 <div className="text-sm text-gray-400 flex items-center gap-1"><FiShield className="text-green-400" /> 100% Safe</div>
-                <div className="text-sm text-gray-400 flex items-center gap-1"><FiStar className="text-yellow-400" /> 4.8/5 Rating</div>
+                <div className="text-sm text-gray-400 flex items-center gap-1"><FiStar className="text-yellow-400" /> 4.4/5 Rating</div>
               </motion.div>
             </div>
 

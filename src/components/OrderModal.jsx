@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FiX, FiCheckCircle, FiCopy } from 'react-icons/fi';
 import productImg from '../assets/product1.jpg';
+import ReviewSnippets from './ReviewSnippets';
 
 const genOrderId = () => {
   const d = new Date();
@@ -219,6 +220,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
             <button type="submit" disabled={status === 'loading'} className="btn-blue">
               {status === 'loading' ? 'PROCESSING...' : `BUY IT NOW - Rs. ${price}.00`}
             </button>
+            <ReviewSnippets />
           </div>
         </form>
       </div>

@@ -4,7 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiX } from 'react-icons/fi';
+
+import review1 from '../assets/review1.jpg';
+import review2 from '../assets/review2.jpg';
+import review3 from '../assets/review3.jpg';
 
 const reviews = [
   {
@@ -18,6 +22,7 @@ const reviews = [
     review: 'I bought this for cleaning my car and laptop. The suction power is surprisingly strong for such a small device. My car seats look spotless now. Highly recommend to anyone looking for a portable cleaning solution!',
     verified: true,
     helpful: 47,
+    image: review1,
   },
   {
     name: 'Priya Patel',
@@ -30,6 +35,7 @@ const reviews = [
     review: 'I\'m a content creator and my keyboard was a mess. This TurboClean Pro cleaned it in under 2 minutes. The blower mode is super effective. Packaging was great and delivery was on time. 5 stars!',
     verified: true,
     helpful: 38,
+    image: review2,
   },
   {
     name: 'Amit Verma',
@@ -42,6 +48,7 @@ const reviews = [
     review: 'At ₹699, this is an absolute steal. I\'ve been using it for 3 weeks now and it still holds a charge well. Used it on my gaming setup, car, and even cleaned my AC filters. Amazing product!',
     verified: true,
     helpful: 55,
+    image: review3,
   },
   {
     name: 'Neha Singh',
@@ -66,6 +73,7 @@ const reviews = [
     review: 'I was skeptical about buying a cheap vacuum but this exceeded my expectations. The 1200Pa suction is real — it pulled out dust I couldn\'t even see. Fast delivery and good packaging. Will buy again!',
     verified: true,
     helpful: 41,
+    image: review1,
   },
   {
     name: 'Vishal Shah',
@@ -78,6 +86,7 @@ const reviews = [
     review: 'Bought this for my car interior cleaning. The long nozzle attachment reaches under seats easily. Battery lasts plenty long for a full car clean. My car looks brand new after every clean. Fantastic product!',
     verified: true,
     helpful: 29,
+    image: review2,
   },
   {
     name: 'Sneha Gupta',
@@ -102,6 +111,7 @@ const reviews = [
     review: 'I clean my PC cabinet every month and this has made the job so easy. The blower mode with the narrow nozzle gets into every corner. No more compressed air cans! USB charging is a great plus. Highly satisfied.',
     verified: true,
     helpful: 44,
+    image: review3,
   },
   {
     name: 'Karan Mehta',
@@ -129,7 +139,7 @@ const reviews = [
   },
 ];
 
-const ReviewCard = ({ review, index, isInView }) => {
+const ReviewCard = ({ review, index, isInView, onImageClick }) => {
   const [expanded, setExpanded] = useState(false);
   const isLong = review.review.length > 150;
 
@@ -138,49 +148,68 @@ const ReviewCard = ({ review, index, isInView }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="card-glass rounded-2xl p-6 hover:border-yellow-500/30 transition-all duration-300"
+      className="card-glass rounded-2xl p-6 hover:border-yellow-500/30 transition-all duration-300 flex flex-col justify-between"
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          {/* Avatar */}
-          <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${review.avatarColor} flex items-center justify-center font-bold text-white text-sm flex-shrink-0`}>
-            {review.avatar}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h4 className="font-semibold text-white text-sm">{review.name}</h4>
-              {review.verified && (
-                <span className="text-xs text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">✓ Verified</span>
-              )}
+      <div>
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            {/* Avatar */}
+            <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${review.avatarColor} flex items-center justify-center font-bold text-white text-sm flex-shrink-0`}>
+              {review.avatar}
             </div>
-            <p className="text-white/40 text-xs">{review.city} · {review.date}</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold text-white text-sm">{review.name}</h4>
+                {review.verified && (
+                  <span className="text-xs text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">✓ Verified</span>
+                )}
+              </div>
+              <p className="text-white/40 text-xs">{review.city} · {review.date}</p>
+            </div>
+          </div>
+
+          {/* Stars */}
+          <div className="flex items-center gap-0.5">
+            {[...Array(review.rating)].map((_, i) => (
+              <FaStar key={i} className="text-yellow-400 text-sm" />
+            ))}
           </div>
         </div>
 
-        {/* Stars */}
-        <div className="flex items-center gap-0.5">
-          {[...Array(review.rating)].map((_, i) => (
-            <FaStar key={i} className="text-yellow-400 text-sm" />
-          ))}
-        </div>
+        {/* Review title */}
+        <h5 className="font-semibold text-white text-sm mb-2">"{review.title}"</h5>
+
+        {/* Review text */}
+        <p className="text-white/60 text-sm leading-relaxed">
+          {isLong && !expanded ? `${review.review.slice(0, 150)}...` : review.review}
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-sky-400 text-xs mt-1 hover:underline"
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+
+        {/* Review Image Photo */}
+        {review.image && (
+          <div 
+            className="mt-4 overflow-hidden rounded-xl border border-white/10 relative group cursor-pointer bg-black/40"
+            onClick={() => onImageClick && onImageClick(review.image)}
+          >
+            <img 
+              src={review.image} 
+              alt={`Review by ${review.name}`} 
+              className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white text-xs font-semibold gap-1">
+              🔍 Click to view photo
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Review title */}
-      <h5 className="font-semibold text-white text-sm mb-2">"{review.title}"</h5>
-
-      {/* Review text */}
-      <p className="text-white/60 text-sm leading-relaxed">
-        {isLong && !expanded ? `${review.review.slice(0, 150)}...` : review.review}
-      </p>
-      {isLong && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-sky-400 text-xs mt-1 hover:underline"
-        >
-          {expanded ? 'Show less' : 'Read more'}
-        </button>
-      )}
 
       {/* Helpful */}
       <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/5">
@@ -195,6 +224,7 @@ const Reviews = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [showAll, setShowAll] = useState(false);
+  const [activeModalImage, setActiveModalImage] = useState(null);
 
   const displayedReviews = showAll ? reviews : reviews.slice(0, 6);
 
@@ -224,10 +254,10 @@ const Reviews = () => {
               ))}
             </div>
             <div className="flex items-center gap-4 text-white/60">
-              <span className="font-display font-bold text-4xl text-white">4.8</span>
+              <span className="font-display font-bold text-4xl text-white">4.4</span>
               <div className="text-left">
-                <p className="text-white/80 font-medium">Excellent</p>
-                <p className="text-white/50 text-sm">Based on 5,000+ reviews</p>
+                <p className="text-white/80 font-medium">Great Rating</p>
+                <p className="text-white/50 text-sm">Based on 728 reviews</p>
               </div>
             </div>
           </div>
@@ -236,7 +266,13 @@ const Reviews = () => {
         {/* Review Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayedReviews.map((review, i) => (
-            <ReviewCard key={i} review={review} index={i} isInView={isInView} />
+            <ReviewCard 
+              key={i} 
+              review={review} 
+              index={i} 
+              isInView={isInView} 
+              onImageClick={(img) => setActiveModalImage(img)}
+            />
           ))}
         </div>
 
@@ -264,6 +300,33 @@ const Reviews = () => {
           </button>
         </motion.div>
       </div>
+
+      {/* Image Lightbox Modal */}
+      <AnimatePresence>
+        {activeModalImage && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setActiveModalImage(null)}
+          >
+            <div className="relative max-w-3xl max-h-[90vh]">
+              <button 
+                onClick={() => setActiveModalImage(null)}
+                className="absolute -top-10 right-0 text-white hover:text-yellow-400 p-2 text-2xl font-bold transition-colors"
+              >
+                <FiX />
+              </button>
+              <img 
+                src={activeModalImage} 
+                alt="Full customer photo review" 
+                className="rounded-2xl max-h-[80vh] w-auto object-contain border border-white/20 shadow-2xl"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

@@ -383,7 +383,7 @@ const OrderSection = () => {
                 {[
                   { icon: <FaTruck className="text-sky-400" size={14} />, text: 'Free Delivery Pan India' },
                   { icon: <FaShieldAlt className="text-green-400" size={14} />, text: 'Cash on Delivery Available' },
-                  { icon: <FaStar className="text-yellow-400" size={14} />, text: '4.8★ Rating · 5000+ Orders' },
+                  { icon: <FaStar className="text-yellow-400" size={14} />, text: '4.4★ Rating · 728+ Orders' },
                   { icon: <FaPhone className="text-purple-400" size={14} />, text: '24/7 Customer Support' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-white/60">

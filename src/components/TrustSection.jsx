@@ -9,7 +9,7 @@ const TrustSection = () => {
 
   const stats = [
     { value: '5000+', label: 'Happy Customers', icon: '😊' },
-    { value: '4.8/5', label: 'Average Rating', icon: '⭐' },
+    { value: '4.4/5', label: 'Average Rating', icon: '⭐' },
     { value: 'FREE', label: 'Pan India Shipping', icon: '🚚' },
     { value: '100%', label: 'Secure Checkout', icon: '🔐' },
   ];

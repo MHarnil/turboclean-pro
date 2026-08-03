@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import OrderModal from '../components/OrderModal';
+import ReviewSnippets from '../components/ReviewSnippets';
 import {
   FiTruck, FiShield, FiCheck, FiChevronDown,
   FiPackage, FiZap, FiWind, FiChevronLeft, FiChevronRight,
@@ -146,8 +147,8 @@ const ProductPage = () => {
                 <div className="flex">
                   {[1,2,3,4,5].map(i => <span key={i} className="text-yellow-400 text-base">★</span>)}
                 </div>
-                <span className="text-sm font-bold text-gray-700">4.8</span>
-                <span className="text-sm text-gray-500">(1,247 reviews)</span>
+                <span className="text-sm font-bold text-gray-700">4.4</span>
+                <span className="text-sm text-gray-500">(728 reviews)</span>
               </div>
 
               {/* Price */}
@@ -176,10 +177,13 @@ const ProductPage = () => {
               {/* Order Now Button */}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="btn-primary py-4 text-lg rounded-xl mb-4 w-full"
+                className="btn-primary py-4 text-lg rounded-xl mb-2 w-full flex items-center justify-center gap-2 bg-black hover:bg-gray-900 text-white font-bold shadow-lg"
               >
                 🛒 Order Now – Cash on Delivery
               </button>
+
+              {/* Review Snippets directly below Order Now button */}
+              <ReviewSnippets />
 
               {/* Delivery Info */}
               <div className="space-y-2 mb-6">

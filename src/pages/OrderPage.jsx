@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReviewSnippets from '../components/ReviewSnippets';
 import {
   FiMinus, FiPlus, FiCheckCircle, FiAlertCircle,
   FiLoader, FiArrowLeft, FiShield, FiTruck, FiPhone,
@@ -543,8 +544,8 @@ const OrderPage = () => {
                   <div className="flex">
                     {[...Array(5)].map((_,i) => <FaStar key={i} className="text-yellow-400 text-sm" />)}
                   </div>
-                  <span className="text-yellow-400 font-bold text-sm">4.8</span>
-                  <span className="text-white/30 text-xs">· 5,000+ Reviews</span>
+                  <span className="text-yellow-400 font-bold text-sm">4.4</span>
+                  <span className="text-white/30 text-xs">· 728 Reviews</span>
                   <span className="ml-1 flex items-center gap-0.5 text-green-400 text-xs font-medium">
                     <MdVerified size={14} /> Verified
                   </span>
@@ -597,7 +598,7 @@ const OrderPage = () => {
               {[
                 { icon:<FaShieldAlt className="text-green-400" size={20} />, title:'COD Available',   sub:'Pay on delivery' },
                 { icon:<FaTruck className="text-sky-400" size={20} />,      title:'Free Shipping',   sub:'Pan India' },
-                { icon:<FaStar className="text-yellow-400" size={20} />,    title:'4.8★ Rating',     sub:'5000+ orders' },
+                { icon:<FaStar className="text-yellow-400" size={20} />,    title:'4.4★ Rating',     sub:'728+ orders' },
                 { icon:<FaLock className="text-purple-400" size={20} />,    title:'Secure Order',    sub:'100% safe' },
               ].map((b,i) => (
                 <div key={i} className="card-glass rounded-2xl p-3 text-center">
@@ -835,6 +836,9 @@ const OrderPage = () => {
                   : `🛒 Place Order — ₹${total} (COD)`
                 }
               </button>
+
+              {/* Review Snippets directly below Order Button */}
+              <ReviewSnippets />
 
               {status==='error' && (
                 <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm mt-3">

@@ -122,7 +122,7 @@ const WhyChooseUs = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { icon: '🏆', value: '5000+', label: 'Happy Customers' },
-              { icon: '⭐', value: '4.8/5', label: 'Customer Rating' },
+              { icon: '⭐', value: '4.4/5', label: 'Customer Rating' },
               { icon: '🚚', value: 'FREE', label: 'Delivery Pan India' },
               { icon: '🔐', value: '100%', label: 'Secure Checkout' },
             ].map((item, i) => (

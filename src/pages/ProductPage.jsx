@@ -17,6 +17,8 @@ import imgFilter   from '../assets/img-filter.jpg';
 import imgCompare  from '../assets/img-comparison.jpg';
 import imgBlower   from '../assets/img-blower.jpg';
 import imgSize     from '../assets/img-features.jpg';
+import vacuumGif1  from '../assets/vacuum-gf.webp';
+import vacuumGif2  from '../assets/vacuumgif3.webp';
 
 const PRICING = { 1: 699, 2: 999, 3: 1399 };
 const MRP     = { 1: 1999, 2: 2799, 3: 3799 };
@@ -182,9 +184,6 @@ const ProductPage = () => {
                 🛒 Order Now – Cash on Delivery
               </button>
 
-              {/* Review Snippets directly below Order Now button */}
-              <ReviewSnippets />
-
               {/* Delivery Info */}
               <div className="space-y-2 mb-6">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -220,10 +219,29 @@ const ProductPage = () => {
         </div>
       </div>
 
+      {/* ── REVIEW SNIPPETS SECTION (BELOW MAIN PRODUCT BOX) ───────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+          <ReviewSnippets />
+        </div>
+      </div>
+
       {/* ── PRODUCT DETAILS ───────────────────── */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-14">
 
         {[
+          {
+            title: 'Live Action Demo: Powerful Suction',
+            body: 'Watch TurboClean Pro in action! With 1200Pa industrial-grade suction power, it instantly pulls out hidden dust, bread crumbs, sand, and pet hair from car seats, sofas, and keyboards.',
+            img: vacuumGif1,
+            badge: '⚡ LIVE DEMO',
+          },
+          {
+            title: 'High-Speed Blower Function',
+            body: 'Equipped with a 91,000 RPM high-velocity motor, the blower nozzle clears dust from tight AC vents, camera lenses, computer fans, and window tracks in seconds.',
+            img: vacuumGif2,
+            badge: '💨 BLOWER DEMO',
+          },
           {
             title: 'Superior Blowing Power',
             body: 'The 4-in-1 Powerful Compressed Air Duster is an innovative and versatile tool designed to meet all your cleaning needs. Equipped with a high-speed 91000RPM motor, this air duster delivers a powerful blast of air to remove dust, debris, and other contaminants from any surface.',
@@ -268,6 +286,11 @@ const ProductPage = () => {
                 <img src={section.img} alt={section.title} className="w-full h-64 md:h-80 object-cover" />
               </div>
               <div className="md:w-1/2 p-8">
+                {section.badge && (
+                  <span className="inline-block bg-[#34367f] text-white text-xs font-black px-3 py-1 rounded-full mb-3 tracking-wider">
+                    {section.badge}
+                  </span>
+                )}
                 <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">{section.title}</h2>
                 <div className="w-10 h-1 bg-[#34367f] rounded mb-4" />
                 <p className="text-gray-600 leading-relaxed">{section.body}</p>

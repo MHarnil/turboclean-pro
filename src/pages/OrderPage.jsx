@@ -837,15 +837,6 @@ const OrderPage = () => {
                 }
               </button>
 
-              {/* Review Snippets directly below Order Button */}
-              <ReviewSnippets />
-
-              {status==='error' && (
-                <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm mt-3">
-                  <FiAlertCircle /><span>Something went wrong. Please try again or contact us.</span>
-                </div>
-              )}
-
               {/* Mini trust strip */}
               <div className="flex items-center justify-center gap-4 mt-3 text-white/30 text-xs">
                 <span className="flex items-center gap-1"><FiShield size={11}/> Safe & Secure</span>
@@ -856,6 +847,11 @@ const OrderPage = () => {
               </div>
             </form>
           </motion.div>
+        </div>
+
+        {/* ── REVIEW SNIPPETS SECTION (BELOW MAIN GRID) ───────── */}
+        <div className="mt-10 border-t border-white/10 pt-6">
+          <ReviewSnippets />
         </div>
       </div>
     </div>

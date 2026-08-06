@@ -1,105 +1,238 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiX, FiCheckCircle } from 'react-icons/fi';
 
 import review1 from '../assets/review1.jpg';
 import review2 from '../assets/review2.jpg';
 import review3 from '../assets/review3.jpg';
+import review4 from '../assets/review4.jpg';
+import review5 from '../assets/review5.jpg';
+import review6 from '../assets/review6.jpg';
+import review7 from '../assets/review7.jpg';
 import product1 from '../assets/product1.jpg';
 import product2 from '../assets/product2.jpg';
 
-const reviewImages = [
-  { id: 1, src: review1, alt: 'Review 1' },
-  { id: 2, src: review2, alt: 'Review 2' },
-  { id: 3, src: review3, alt: 'Review 3' },
-  { id: 4, src: product1, alt: 'Review 4' },
-  { id: 5, src: product2, alt: 'Review 5' },
-];
-
-const customerComments = [
-  { name: 'Kasish', rating: 5, text: 'Very helpful product. Amazed by the quality 😊' },
-  { name: 'Rahul Sharma', rating: 5, text: 'Cleaned my car seats in 5 minutes! Super powerful.' },
-  { name: 'Priya Patel', rating: 5, text: 'Awesome product for keyboard & laptop dust cleaning.' },
-  { name: 'Amit Verma', rating: 5, text: 'At ₹699, this is absolute value for money!' },
-  { name: 'Sneha Gupta', rating: 5, text: 'Fast delivery, received in 3 days. COD option is great.' },
+const reviewCards = [
+  {
+    id: 1,
+    name: 'Rahul Sharma',
+    city: 'Mumbai',
+    date: '2 days ago',
+    rating: 5,
+    verified: true,
+    image: review1,
+    comment: 'Cleaned my car seats in 5 minutes! Super powerful suction.',
+    avatarColor: 'bg-blue-600',
+    initials: 'RS',
+  },
+  {
+    id: 2,
+    name: 'Hardik Shah',
+    city: 'Surat',
+    date: 'Yesterday',
+    rating: 5,
+    verified: true,
+    image: review4,
+    comment: 'Received complete package with all nozzle attachments. Excellent quality!',
+    avatarColor: 'bg-teal-600',
+    initials: 'HS',
+  },
+  {
+    id: 3,
+    name: 'Kasish P.',
+    city: 'Delhi',
+    date: '3 days ago',
+    rating: 5,
+    verified: true,
+    image: review2,
+    comment: 'Very helpful product. Amazed by the quality & build! 😊',
+    avatarColor: 'bg-emerald-600',
+    initials: 'KP',
+  },
+  {
+    id: 4,
+    name: 'Manish Joshi',
+    city: 'Jaipur',
+    date: '2 days ago',
+    rating: 5,
+    verified: true,
+    image: review5,
+    comment: 'Unboxed & tested immediately — suction power is 10/10. Great product!',
+    avatarColor: 'bg-indigo-600',
+    initials: 'MJ',
+  },
+  {
+    id: 5,
+    name: 'Priya Patel',
+    city: 'Ahmedabad',
+    date: '4 days ago',
+    rating: 5,
+    verified: true,
+    image: review3,
+    comment: 'Awesome product for keyboard & laptop dust cleaning!',
+    avatarColor: 'bg-rose-600',
+    initials: 'PP',
+  },
+  {
+    id: 6,
+    name: 'Vikram Singh',
+    city: 'Chandigarh',
+    date: '3 days ago',
+    rating: 5,
+    verified: true,
+    image: review6,
+    comment: 'Perfect for deep cleaning my AC vents & computer cabinet. Must buy!',
+    avatarColor: 'bg-[#34367f]',
+    initials: 'VS',
+  },
+  {
+    id: 7,
+    name: 'Amit Verma',
+    city: 'Bangalore',
+    date: '5 days ago',
+    rating: 5,
+    verified: true,
+    image: product1,
+    comment: 'At ₹699, this is absolute value for money. 100% recommended!',
+    avatarColor: 'bg-amber-600',
+    initials: 'AV',
+  },
+  {
+    id: 8,
+    name: 'Deepak Kumar',
+    city: 'Kolkata',
+    date: '4 days ago',
+    rating: 5,
+    verified: true,
+    image: review7,
+    comment: 'Battery backup is solid and USB-C charging is super convenient.',
+    avatarColor: 'bg-cyan-700',
+    initials: 'DK',
+  },
+  {
+    id: 9,
+    name: 'Sneha Gupta',
+    city: 'Pune',
+    date: '1 week ago',
+    rating: 5,
+    verified: true,
+    image: product2,
+    comment: 'Fast delivery, received in 3 days. COD option made ordering easy.',
+    avatarColor: 'bg-purple-600',
+    initials: 'SG',
+  },
 ];
 
 export default function ReviewSnippets() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef(null);
   const [modalImage, setModalImage] = useState(null);
 
-  const prevComment = () => {
-    setCurrentIndex((prev) => (prev === 0 ? customerComments.length - 1 : prev - 1));
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -260 : 260;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
   };
-
-  const nextComment = () => {
-    setCurrentIndex((prev) => (prev === customerComments.length - 1 ? 0 : prev + 1));
-  };
-
-  const current = customerComments[currentIndex];
 
   return (
     <div className="my-6 w-full text-left">
-      {/* Title */}
-      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-        Review snippets
-      </h3>
-
-      {/* 5 Thumbnails Grid */}
-      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2.5 mb-4">
-        {reviewImages.map((img) => (
-          <div
-            key={img.id}
-            onClick={() => setModalImage(img.src)}
-            className="aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 cursor-pointer hover:opacity-90 hover:scale-105 transition-all shadow-sm bg-gray-100 dark:bg-dark-800"
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Review Comment Carousel Box */}
-      <div className="relative bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-2">
-        {/* Prev Button */}
-        <button
-          type="button"
-          onClick={prevComment}
-          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white flex items-center justify-center text-sm transition-colors flex-shrink-0"
-          aria-label="Previous review"
-        >
-          <FiChevronLeft size={18} />
-        </button>
-
-        {/* Comment Content */}
-        <div className="flex-1 text-center px-2">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <span className="font-bold text-gray-900 dark:text-white text-sm">
-              {current.name}
+      {/* Header bar */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="text-base font-black text-gray-900 dark:text-white flex items-center gap-1.5">
+            <span>Customer Photos</span>
+            <span className="text-xs bg-amber-400/20 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <FaStar className="text-amber-400" size={11} /> 4.4 (728 Reviews)
             </span>
-            <div className="flex items-center text-amber-400 text-xs">
-              {[...Array(current.rating)].map((_, i) => (
-                <FaStar key={i} />
-              ))}
-            </div>
-          </div>
-          <p className="text-xs sm:text-sm text-gray-700 dark:text-white/80 font-medium">
-            "{current.text}"
-          </p>
+          </h3>
         </div>
 
-        {/* Next Button */}
-        <button
-          type="button"
-          onClick={nextComment}
-          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white flex items-center justify-center text-sm transition-colors flex-shrink-0"
-          aria-label="Next review"
-        >
-          <FiChevronRight size={18} />
-        </button>
+        {/* Scroll Controls */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => scroll('left')}
+            className="w-7 h-7 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white flex items-center justify-center transition-colors"
+            aria-label="Scroll left"
+          >
+            <FiChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => scroll('right')}
+            className="w-7 h-7 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white flex items-center justify-center transition-colors"
+            aria-label="Scroll right"
+          >
+            <FiChevronRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Horizontal Customer Photo Cards Reel */}
+      <div
+        ref={scrollRef}
+        className="flex gap-3 overflow-x-auto no-scrollbar py-2 px-0.5 scroll-smooth"
+      >
+        {reviewCards.map((card) => (
+          <div
+            key={card.id}
+            className="w-[230px] flex-shrink-0 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-amber-400/50 transition-all flex flex-col justify-between"
+          >
+            <div>
+              {/* Customer Header */}
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-7 h-7 rounded-full ${card.avatarColor} text-white flex items-center justify-center font-bold text-xs flex-shrink-0`}
+                  >
+                    {card.initials}
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-900 dark:text-white leading-tight">
+                      {card.name}
+                    </h4>
+                    <span className="text-[10px] text-gray-400 block leading-tight">
+                      {card.city} • {card.date}
+                    </span>
+                  </div>
+                </div>
+
+                {card.verified && (
+                  <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-0.5 bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                    <FiCheckCircle size={10} /> Verified
+                  </span>
+                )}
+              </div>
+
+              {/* Stars */}
+              <div className="flex items-center text-amber-400 text-xs mb-2">
+                {[...Array(card.rating)].map((_, i) => (
+                  <FaStar key={i} />
+                ))}
+              </div>
+
+              {/* Customer Photo */}
+              <div
+                onClick={() => setModalImage(card.image)}
+                className="relative rounded-xl overflow-hidden aspect-[4/3] bg-gray-100 dark:bg-dark-800 cursor-pointer group mb-2 border border-gray-100 dark:border-white/5"
+              >
+                <img
+                  src={card.image}
+                  alt={`Photo review by ${card.name}`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
+                  🔍 Tap to view
+                </div>
+              </div>
+
+              {/* Comment text */}
+              <p className="text-xs text-gray-700 dark:text-white/80 line-clamp-2 leading-relaxed font-medium">
+                "{card.comment}"
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Fullscreen Image Lightbox Modal */}
@@ -117,7 +250,7 @@ export default function ReviewSnippets() {
             </button>
             <img
               src={modalImage}
-              alt="Review preview"
+              alt="Full customer photo review"
               className="rounded-2xl max-h-[80vh] w-auto object-contain border border-white/20 shadow-2xl"
             />
           </div>

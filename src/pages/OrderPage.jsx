@@ -67,6 +67,18 @@ const OrderPage = () => {
   const total   = qty * PRICE;
   const savings = qty * (MRP - PRICE);
 
+  // 🎯 Meta Pixel — InitiateCheckout event
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
+        value: PRICE,
+        currency: 'INR',
+        content_name: 'TurboClean Pro',
+      });
+    }
+  }, []);
+
   const change = (e) => {
     const { name, value } = e.target;
     setForm(p => ({ ...p, [name]: value }));

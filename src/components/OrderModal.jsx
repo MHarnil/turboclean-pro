@@ -97,6 +97,17 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
         total, qty, city: form.city, state: form.state
       });
       setStatus('success');
+
+      // 🎯 Meta Pixel — Purchase event
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Purchase', {
+          value: total,
+          currency: 'INR',
+          content_name: 'TurboClean Pro',
+          content_ids: ['TCP-001'],
+          num_items: qty,
+        });
+      }
     } catch {
       setStatus('error');
     }

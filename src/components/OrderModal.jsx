@@ -37,7 +37,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
   if (!isOpen) return null;
 
   const baseTotal       = price;
-  const prepaidDiscount = paymentMode === 'PREPAID' ? 100 : 0;
+  const prepaidDiscount = paymentMode === 'PREPAID' ? 60 : 0;
   const total           = Math.max(0, baseTotal - prepaidDiscount);
   const qty             = selectedPack;
 
@@ -243,7 +243,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
                   <input type="radio" checked={paymentMode === 'PREPAID'} onChange={() => setPaymentMode('PREPAID')} className="accent-emerald-500" />
                   <span>💳 Online / UPI</span>
                 </div>
-                <span className="text-[10px] bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded">₹100 OFF</span>
+                <span className="text-[10px] bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded">₹60 OFF</span>
               </div>
 
               <div
@@ -264,7 +264,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
 
             {paymentMode === 'PREPAID' && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center space-y-2">
-                <p className="text-xs font-bold text-emerald-800">Scan QR Code to Pay Rs. {total} (Extra ₹100 OFF):</p>
+                <p className="text-xs font-bold text-emerald-800">Scan QR Code to Pay Rs. {total} (Extra ₹60 OFF):</p>
                 <div className="bg-white p-2 rounded-lg w-36 h-36 mx-auto border border-emerald-300">
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dstarlight6114%40okicici%26pn%3DTurboClean%2520Pro%26am%3D${total}%26cu%3DINR`}

@@ -60,7 +60,7 @@ const OrderPage = () => {
   const [upiCopied, setUpiCopied]     = useState(false);
 
   const baseTotal       = qty * PRICE;
-  const prepaidDiscount = paymentMode === 'PREPAID' ? 100 : 0;
+  const prepaidDiscount = paymentMode === 'PREPAID' ? 60 : 0;
   const total           = Math.max(0, baseTotal - prepaidDiscount);
   const savings         = qty * (MRP - PRICE) + prepaidDiscount;
 
@@ -845,7 +845,7 @@ const OrderPage = () => {
                     Select Payment Method
                   </span>
                   <span className="text-[11px] bg-emerald-500/20 text-emerald-300 font-extrabold px-2.5 py-1 rounded-full border border-emerald-500/30">
-                    ⚡ Extra ₹100 OFF on Prepaid
+                    ⚡ Extra ₹60 OFF on Prepaid
                   </span>
                 </h3>
 
@@ -871,7 +871,7 @@ const OrderPage = () => {
                         <span className="font-black text-white text-sm">💳 Online / UPI</span>
                       </div>
                       <span className="bg-emerald-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        ₹100 OFF
+                        ₹60 OFF
                       </span>
                     </div>
                     <p className="text-xs text-emerald-300 font-medium pl-6">
@@ -910,7 +910,7 @@ const OrderPage = () => {
                 {paymentMode === 'PREPAID' && (
                   <div className="bg-dark-800/80 border border-emerald-500/30 rounded-2xl p-4 text-center space-y-3">
                     <div className="flex items-center justify-center gap-2 bg-emerald-500/20 text-emerald-300 py-1.5 px-3 rounded-xl text-xs font-bold w-fit mx-auto border border-emerald-500/30">
-                      <span>🎉 Extra ₹100 Prepaid Discount Applied!</span>
+                      <span>🎉 Extra ₹60 Prepaid Discount Applied!</span>
                     </div>
 
                     <p className="text-xs text-white/70">Scan QR Code using any UPI App (GPay, PhonePe, Paytm, BHIM):</p>
@@ -972,7 +972,7 @@ const OrderPage = () => {
               >
                 {status==='loading'
                   ? <span className="flex items-center gap-2 justify-center"><FiLoader className="animate-spin" size={20}/> Placing Order...</span>
-                  : `🛒 Place Order — ₹${total} (${paymentMode === 'PREPAID' ? 'PREPAID - ₹100 OFF' : 'COD'})`
+                  : `🛒 Place Order — ₹${total} (${paymentMode === 'PREPAID' ? 'PREPAID - ₹60 OFF' : 'COD'})`
                 }
               </button>
 

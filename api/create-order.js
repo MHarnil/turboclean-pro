@@ -62,7 +62,7 @@ export default async function handler(req, res) {
           <tr><td style="padding:10px 4px;color:#94a3b8;">📦 Qty</td><td style="padding:10px 4px;border-bottom:1px solid #1e3a5f;">${quantity} unit${quantity > 1 ? 's' : ''}</td></tr>
           <tr><td style="padding:10px 4px;color:#94a3b8;">💳 Payment Mode</td><td style="padding:10px 4px;font-weight:bold;color:${isPrepaid ? '#34d399' : '#fbbf24'};border-bottom:1px solid #1e3a5f;">${payLabel}</td></tr>
           ${utrNumber ? `<tr><td style="padding:10px 4px;color:#94a3b8;">🔢 UPI UTR / Ref</td><td style="padding:10px 4px;font-weight:bold;color:#38bdf8;border-bottom:1px solid #1e3a5f;">${utrNumber}</td></tr>` : ''}
-          <tr><td style="padding:10px 4px;color:#94a3b8;">💰 Amount Paid</td><td style="padding:10px 4px;font-size:20px;font-weight:bold;color:#fbbf24;">₹${totalAmount} ${isPrepaid ? '(PREPAID - ₹100 OFF APPLIED)' : '(COD)'}</td></tr>
+          <tr><td style="padding:10px 4px;color:#94a3b8;">💰 Amount Paid</td><td style="padding:10px 4px;font-size:20px;font-weight:bold;color:#fbbf24;">₹${totalAmount} ${isPrepaid ? '(PREPAID - ₹60 OFF APPLIED)' : '(COD)'}</td></tr>
         </table>
         <div style="margin-top:20px;background:#0f2040;border-radius:10px;padding:14px;text-align:center;">
           <p style="margin:0;font-size:13px;color:#94a3b8;">Expected Delivery</p>

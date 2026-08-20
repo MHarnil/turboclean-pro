@@ -31,16 +31,10 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle|loading|success|error
   const [orderData, setOrderData] = useState(null);
-  const [paymentMode, setPaymentMode] = useState('PREPAID'); // 'PREPAID' | 'COD'
-  const [utrNumber, setUtrNumber]     = useState('');
-  const [upiCopied, setUpiCopied]     = useState(false);
-
   if (!isOpen) return null;
 
-  const baseTotal       = price;
-  const prepaidDiscount = paymentMode === 'PREPAID' ? 60 : 0;
-  const total           = Math.max(0, baseTotal - prepaidDiscount);
-  const qty             = selectedPack;
+  const total = price;
+  const qty   = selectedPack;
 
   const change = (e) => {
     const { name, value } = e.target;
@@ -228,97 +222,19 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
             <div className="bg-red-50 text-red-500 p-3 rounded text-sm">Something went wrong. Please try again.</div>
           )}
 
-          {/* Payment Mode Selector */}
-          <div className="border-t pt-4 mt-4 space-y-3">
-            <label className="block text-xs font-black text-gray-800 uppercase tracking-wider">Select Payment Method</label>
-            <div className="grid grid-cols-2 gap-2">
-              <div
-                onClick={() => setPaymentMode('PREPAID')}
-                className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-left ${
-                  paymentMode === 'PREPAID'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-gray-200 bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900 mb-0.5">
-                  <input type="radio" checked={paymentMode === 'PREPAID'} onChange={() => setPaymentMode('PREPAID')} className="accent-emerald-500" />
-                  <span>💳 Online / UPI</span>
-                </div>
-                <span className="text-[10px] bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded">₹60 OFF</span>
-              </div>
-
-              <div
-                onClick={() => setPaymentMode('COD')}
-                className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-left ${
-                  paymentMode === 'COD'
-                    ? 'border-amber-500 bg-amber-50'
-                    : 'border-gray-200 bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900 mb-0.5">
-                  <input type="radio" checked={paymentMode === 'COD'} onChange={() => setPaymentMode('COD')} className="accent-amber-500" />
-                  <span>🚚 Cash on Delivery</span>
-                </div>
-                <span className="text-[10px] text-gray-500 font-medium">Full Rs. {baseTotal}</span>
-              </div>
+          <div className="border-t pt-4 mt-6">
+            <div className="flex justify-between text-gray-600 mb-2">
+              <span>Subtotal</span>
+              <span className="font-bold">Rs. {price}.00</span>
             </div>
-
-            {paymentMode === 'PREPAID' && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center space-y-2">
-                <p className="text-xs font-bold text-emerald-800">Scan Official PhonePe QR Code (Extra ₹60 OFF):</p>
-                <div className="bg-white p-2 rounded-xl w-36 h-36 mx-auto border-2 border-emerald-400 shadow-md overflow-hidden flex items-center justify-center">
-                  <img
-                    src={phonepeQr}
-                    alt="Official PhonePe QR Code - MALAVIYA HET SANJAYBHAI"
-                    className="w-full h-full object-contain rounded-lg"
-                  />
-                </div>
-                <p className="text-[11px] font-extrabold text-emerald-800">MALAVIYA HET SANJAYBHAI</p>
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-xs font-mono font-bold text-gray-700">8780772623@ibl</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText('8780772623@ibl');
-                      setUpiCopied(true);
-                      setTimeout(() => setUpiCopied(false), 2000);
-                    }}
-                    className="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded"
-                  >
-                    {upiCopied ? 'Copied!' : 'Copy'}
-                  </button>
-                </div>
-                <div className="pt-2 text-left">
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">
-                    UPI Transaction ID / UTR (Optional):
-                  </label>
-                  <input
-                    type="text"
-                    value={utrNumber}
-                    onChange={(e) => setUtrNumber(e.target.value)}
-                    placeholder="Enter UTR / Transaction Ref No."
-                    maxLength={30}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-white text-gray-900 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-between text-gray-900 text-lg font-black pt-2">
+            <div className="flex justify-between text-gray-900 text-lg font-black mb-4">
               <span>Total</span>
-              <span className={paymentMode === 'PREPAID' ? 'text-emerald-600' : 'text-gray-900'}>
-                Rs. {total}.00
-              </span>
+              <span>Rs. {price}.00</span>
             </div>
-            <button
-              type="submit"
-              disabled={status === 'loading'}
-              className={`w-full py-4 text-base font-black rounded-xl text-white transition-all ${
-                paymentMode === 'PREPAID' ? 'bg-emerald-600 hover:bg-emerald-700' : 'btn-blue'
-              }`}
-            >
-              {status === 'loading' ? 'PROCESSING...' : `PLACE ORDER - Rs. ${total}.00`}
+            <button type="submit" disabled={status === 'loading'} className="btn-blue">
+              {status === 'loading' ? 'PROCESSING...' : `BUY IT NOW - Rs. ${price}.00 (COD)`}
             </button>
+            <ReviewSnippets />
           </div>
         </form>
       </div>

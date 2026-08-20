@@ -46,7 +46,7 @@ export default async function handler(req, res) {
   const sellerHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#0a1628;color:#ffffff;border-radius:16px;overflow:hidden;">
       <div style="background:linear-gradient(135deg,${isPrepaid ? '#10b981,#059669' : '#0ea5e9,#0369a1'});padding:24px;text-align:center;">
-        <h1 style="margin:0;font-size:22px;">⚡ TurboClean Pro — ${isPrepaid ? 'Prepaid Order Received!' : 'New COD Order!'}</h1>
+        <h1 style="margin:0;font-size:22px;">⚡ TurboClean Pro — ${isPrepaid ? '💳 PREPAID ORDER (MONEY TRANSFERRED VIA UPI)!' : '🚚 New COD Order!'}</h1>
       </div>
       <div style="padding:24px;">
         <div style="background:#152a52;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
@@ -88,26 +88,29 @@ export default async function handler(req, res) {
         </div>
         <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px;">
           <tr style="background:#f1f5f9;"><td style="padding:12px;color:#64748b;width:40%;border-radius:8px 0 0 0;">📦 Product</td><td style="padding:12px;font-weight:bold;">TurboClean Pro × ${quantity}</td></tr>
-          <tr><td style="padding:12px;color:#64748b;">💰 Amount</td><td style="padding:12px;font-size:20px;font-weight:bold;color:#16a34a;">₹${totalAmount} <span style="font-size:13px;color:#64748b;">(Cash on Delivery)</span></td></tr>
+          <tr><td style="padding:12px;color:#64748b;">💳 Payment Mode</td><td style="padding:12px;font-weight:bold;color:${isPrepaid ? '#16a34a' : '#d97706'};">${isPrepaid ? '💳 Online / Prepaid Paid' : '🚚 Cash on Delivery'}</td></tr>
+          ${utrNumber ? `<tr style="background:#f1f5f9;"><td style="padding:12px;color:#64748b;">🔢 UPI UTR / Ref</td><td style="padding:12px;font-weight:bold;color:#2563eb;">${utrNumber}</td></tr>` : ''}
+          <tr><td style="padding:12px;color:#64748b;">💰 Amount Paid</td><td style="padding:12px;font-size:20px;font-weight:bold;color:#16a34a;">₹${totalAmount} <span style="font-size:13px;color:#64748b;">(${isPrepaid ? 'PREPAID ₹60 OFF APPLIED' : 'Cash on Delivery'})</span></td></tr>
           <tr style="background:#f1f5f9;"><td style="padding:12px;color:#64748b;">🚚 Shipping</td><td style="padding:12px;color:#16a34a;font-weight:bold;">FREE Delivery</td></tr>
           <tr><td style="padding:12px;color:#64748b;">📍 Deliver To</td><td style="padding:12px;">${fullAddress}</td></tr>
           <tr style="background:#f1f5f9;"><td style="padding:12px;color:#64748b;">🗓️ Expected By</td><td style="padding:12px;font-weight:bold;color:#2563eb;">${deliveryDate || '4-5 Business Days'}</td></tr>
         </table>
         <div style="border-left:4px solid #22c55e;padding:16px;background:#f0fdf4;border-radius:0 8px 8px 0;margin-bottom:20px;">
-          <p style="margin:0;font-weight:bold;color:#15803d;font-size:14px;">💰 Aapne ₹${savings} bachaye!</p>
+          <p style="margin:0;font-weight:bold;color:#15803d;font-size:14px;">💰 Aapne ₹${savings + (isPrepaid ? 60 : 0)} bachaye!</p>
           <p style="margin:6px 0 0;font-size:13px;color:#64748b;">MRP ₹${1399 * quantity} ki jagah sirf ₹${totalAmount}</p>
         </div>
         <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;">
-          <p style="margin:0 0 12px;font-weight:bold;color:#1e293b;font-size:14px;">📋 Aage Kya Hoga:</p>
+          <p style="margin:0 0 12px;font-weight:bold;color:#1e293b;font-size:14px;">📋 Order Status & Details:</p>
           <div style="font-size:13px;color:#475569;line-height:2;">
             ✅ Order placed — ho gaya!<br>
-            📞 Hum aapko call karenge order confirm karne ke liye<br>
+            ${isPrepaid ? '💳 Payment status: Online UPI Payment Received' : '📞 Hum aapko call karenge order confirm karne ke liye'}<br>
             📦 Product 24 hours mein pack ho jayega<br>
             🚚 2-4 business days mein delivery<br>
-            💵 Delivery pe cash dena hoga (COD)
+            ${isPrepaid ? '🎉 Prepaid Order — No cash needed at delivery!' : '💵 Delivery pe cash dena hoga (COD)'}
           </div>
         </div>
       </div>
+    </div>`;
       <div style="padding:20px;text-align:center;background:#f1f5f9;">
         <p style="margin:0;font-size:13px;color:#64748b;">Koi problem? Email karo: <a href="mailto:${GMAIL_USER}" style="color:#2563eb;">${GMAIL_USER}</a></p>
         <p style="margin:8px 0 0;font-size:11px;color:#94a3b8;">TurboClean Pro • turboclean.ruup.in</p>

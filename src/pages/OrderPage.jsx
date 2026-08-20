@@ -55,17 +55,14 @@ const init = {
 
 const OrderPage = () => {
   const navigate   = useNavigate();
-  const [qty, setQty]       = useState(1);
-  const [form, setForm]     = useState(init);
-  const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // idle|loading|success|error
-  const [activeImg, setActiveImg] = useState(0);
-  const [orderData, setOrderData] = useState(null);
-  const [copied, setCopied]       = useState(false);
-  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [paymentMode, setPaymentMode] = useState('PREPAID'); // 'PREPAID' | 'COD'
+  const [utrNumber, setUtrNumber]     = useState('');
+  const [upiCopied, setUpiCopied]     = useState(false);
 
-  const total   = qty * PRICE;
-  const savings = qty * (MRP - PRICE);
+  const baseTotal       = qty * PRICE;
+  const prepaidDiscount = paymentMode === 'PREPAID' ? 100 : 0;
+  const total           = Math.max(0, baseTotal - prepaidDiscount);
+  const savings         = qty * (MRP - PRICE) + prepaidDiscount;
 
   // 🎯 Meta Pixel — InitiateCheckout event
   useEffect(() => {
@@ -153,6 +150,9 @@ const OrderPage = () => {
           totalAmount:  total,
           orderDate,
           deliveryDate: deliveryStr,
+          paymentMode,
+          utrNumber,
+          discountAmount: prepaidDiscount,
         }),
       });
 
@@ -166,6 +166,7 @@ const OrderPage = () => {
         awbNumber, iThinkCreated,
         name:  form.fullName, phone: form.phone,
         email: form.email,   qty,   total,
+        paymentMode, utrNumber,
         city:  form.city, state: form.state, pincode: form.pincode,
       });
       setStatus('success');
@@ -836,16 +837,142 @@ const OrderPage = () => {
                 </div>
               </div>
 
+              {/* ── 3. PAYMENT METHOD ────────────────────────────────────── */}
+              <div className="card-glass rounded-3xl p-5 mb-6">
+                <h3 className="font-display font-bold text-white mb-4 flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <span className="w-6 h-6 bg-sky-500 rounded-full text-xs flex items-center justify-center font-black">3</span>
+                    Select Payment Method
+                  </span>
+                  <span className="text-[11px] bg-emerald-500/20 text-emerald-300 font-extrabold px-2.5 py-1 rounded-full border border-emerald-500/30">
+                    ⚡ Extra ₹100 OFF on Prepaid
+                  </span>
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                  {/* Prepaid Option */}
+                  <div
+                    onClick={() => setPaymentMode('PREPAID')}
+                    className={`relative cursor-pointer rounded-2xl p-4 border-2 transition-all ${
+                      paymentMode === 'PREPAID'
+                        ? 'border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.2)]'
+                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="paymentMode"
+                          checked={paymentMode === 'PREPAID'}
+                          onChange={() => setPaymentMode('PREPAID')}
+                          className="accent-emerald-400 w-4 h-4 cursor-pointer"
+                        />
+                        <span className="font-black text-white text-sm">💳 Online / UPI</span>
+                      </div>
+                      <span className="bg-emerald-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        ₹100 OFF
+                      </span>
+                    </div>
+                    <p className="text-xs text-emerald-300 font-medium pl-6">
+                      Pay via GPay, PhonePe, Paytm QR scanner
+                    </p>
+                  </div>
+
+                  {/* COD Option */}
+                  <div
+                    onClick={() => setPaymentMode('COD')}
+                    className={`relative cursor-pointer rounded-2xl p-4 border-2 transition-all ${
+                      paymentMode === 'COD'
+                        ? 'border-amber-400 bg-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.2)]'
+                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="paymentMode"
+                          checked={paymentMode === 'COD'}
+                          onChange={() => setPaymentMode('COD')}
+                          className="accent-amber-400 w-4 h-4 cursor-pointer"
+                        />
+                        <span className="font-black text-white text-sm">🚚 Cash on Delivery</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-white/50 font-medium pl-6">
+                      Pay ₹{baseTotal} on delivery
+                    </p>
+                  </div>
+                </div>
+
+                {/* If PREPAID is selected — Show UPI QR Scanner & UPI Details */}
+                {paymentMode === 'PREPAID' && (
+                  <div className="bg-dark-800/80 border border-emerald-500/30 rounded-2xl p-4 text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2 bg-emerald-500/20 text-emerald-300 py-1.5 px-3 rounded-xl text-xs font-bold w-fit mx-auto border border-emerald-500/30">
+                      <span>🎉 Extra ₹100 Prepaid Discount Applied!</span>
+                    </div>
+
+                    <p className="text-xs text-white/70">Scan QR Code using any UPI App (GPay, PhonePe, Paytm, BHIM):</p>
+
+                    {/* QR Code */}
+                    <div className="bg-white p-3 rounded-2xl w-44 h-44 mx-auto flex items-center justify-center shadow-lg border-2 border-emerald-400">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dstarlight6114%40okicici%26pn%3DTurboClean%2520Pro%26am%3D${total}%26cu%3DINR`}
+                        alt="UPI Payment QR Code"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+
+                    {/* UPI ID Copy */}
+                    <div className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl p-2 max-w-xs mx-auto">
+                      <span className="text-xs font-mono text-emerald-300 font-bold">starlight6114@okicici</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText('starlight6114@okicici');
+                          setUpiCopied(true);
+                          setTimeout(() => setUpiCopied(false), 2000);
+                        }}
+                        className="text-xs bg-emerald-500 text-black px-2.5 py-1 rounded-lg font-bold hover:bg-emerald-400 transition"
+                      >
+                        {upiCopied ? '✓ Copied' : 'Copy UPI'}
+                      </button>
+                    </div>
+
+                    {/* Optional UTR / Txn Ref Input */}
+                    <div className="pt-2 border-t border-white/10 max-w-sm mx-auto text-left">
+                      <label className="block text-white/60 text-xs font-medium mb-1 flex items-center justify-between">
+                        <span>UPI Transaction ID / UTR (Optional)</span>
+                        <span className="text-[10px] text-white/40">12 Digits</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={utrNumber}
+                        onChange={(e) => setUtrNumber(e.target.value)}
+                        placeholder="Enter 12-digit UTR Ref No."
+                        maxLength={12}
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-xs focus:outline-none focus:border-emerald-400"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* ── PLACE ORDER BUTTON ─────────────────────────────────── */}
               <button
                 type="submit"
                 id="place-order-btn"
                 disabled={status==='loading'}
-                className="w-full btn-gold py-5 text-base rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_8px_32px_rgba(251,191,36,0.3)] hover:shadow-[0_8px_40px_rgba(251,191,36,0.5)]"
+                className={`w-full py-5 text-base font-black rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed transition-all ${
+                  paymentMode === 'PREPAID'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-black shadow-[0_8px_32px_rgba(16,185,129,0.4)]'
+                    : 'btn-gold shadow-[0_8px_32px_rgba(251,191,36,0.3)] hover:shadow-[0_8px_40px_rgba(251,191,36,0.5)]'
+                }`}
               >
                 {status==='loading'
                   ? <span className="flex items-center gap-2 justify-center"><FiLoader className="animate-spin" size={20}/> Placing Order...</span>
-                  : `🛒 Place Order — ₹${total} (COD)`
+                  : `🛒 Place Order — ₹${total} (${paymentMode === 'PREPAID' ? 'PREPAID - ₹100 OFF' : 'COD'})`
                 }
               </button>
 

@@ -15,9 +15,13 @@ export default async function handler(req, res) {
     orderId, customerName, phone, email,
     address, city, state, pincode,
     quantity, totalAmount, orderDate, deliveryDate,
+    paymentMode = 'COD', utrNumber = '', discountAmount = 0,
   } = req.body;
 
-  console.log('📦 New order received:', orderId, '| Customer email:', email || 'NOT PROVIDED');
+  const isPrepaid = String(paymentMode).toUpperCase() === 'PREPAID';
+  const payLabel  = isPrepaid ? '💳 PREPAID (ONLINE / UPI)' : '🚚 CASH ON DELIVERY (COD)';
+
+  console.log('📦 New order received:', orderId, '| Payment Mode:', paymentMode, '| Customer email:', email || 'NOT PROVIDED');
 
   if (!GMAIL_USER || !GMAIL_APP_PASS) {
     console.error('❌ Gmail credentials missing in environment variables!');
@@ -41,8 +45,8 @@ export default async function handler(req, res) {
   // ── Email 1: SELLER Notification ────────────────────────────────────────
   const sellerHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#0a1628;color:#ffffff;border-radius:16px;overflow:hidden;">
-      <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:24px;text-align:center;">
-        <h1 style="margin:0;font-size:22px;">⚡ TurboClean Pro — New Order!</h1>
+      <div style="background:linear-gradient(135deg,${isPrepaid ? '#10b981,#059669' : '#0ea5e9,#0369a1'});padding:24px;text-align:center;">
+        <h1 style="margin:0;font-size:22px;">⚡ TurboClean Pro — ${isPrepaid ? 'Prepaid Order Received!' : 'New COD Order!'}</h1>
       </div>
       <div style="padding:24px;">
         <div style="background:#152a52;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
@@ -56,7 +60,9 @@ export default async function handler(req, res) {
           <tr><td style="padding:10px 4px;color:#94a3b8;">📧 Email</td><td style="padding:10px 4px;border-bottom:1px solid #1e3a5f;">${email || 'Not provided'}</td></tr>
           <tr><td style="padding:10px 4px;color:#94a3b8;">📍 Address</td><td style="padding:10px 4px;border-bottom:1px solid #1e3a5f;">${fullAddress}</td></tr>
           <tr><td style="padding:10px 4px;color:#94a3b8;">📦 Qty</td><td style="padding:10px 4px;border-bottom:1px solid #1e3a5f;">${quantity} unit${quantity > 1 ? 's' : ''}</td></tr>
-          <tr><td style="padding:10px 4px;color:#94a3b8;">💰 Amount</td><td style="padding:10px 4px;font-size:20px;font-weight:bold;color:#fbbf24;">₹${totalAmount} (COD)</td></tr>
+          <tr><td style="padding:10px 4px;color:#94a3b8;">💳 Payment Mode</td><td style="padding:10px 4px;font-weight:bold;color:${isPrepaid ? '#34d399' : '#fbbf24'};border-bottom:1px solid #1e3a5f;">${payLabel}</td></tr>
+          ${utrNumber ? `<tr><td style="padding:10px 4px;color:#94a3b8;">🔢 UPI UTR / Ref</td><td style="padding:10px 4px;font-weight:bold;color:#38bdf8;border-bottom:1px solid #1e3a5f;">${utrNumber}</td></tr>` : ''}
+          <tr><td style="padding:10px 4px;color:#94a3b8;">💰 Amount Paid</td><td style="padding:10px 4px;font-size:20px;font-weight:bold;color:#fbbf24;">₹${totalAmount} ${isPrepaid ? '(PREPAID - ₹100 OFF APPLIED)' : '(COD)'}</td></tr>
         </table>
         <div style="margin-top:20px;background:#0f2040;border-radius:10px;padding:14px;text-align:center;">
           <p style="margin:0;font-size:13px;color:#94a3b8;">Expected Delivery</p>
@@ -225,8 +231,8 @@ export default async function handler(req, res) {
             first_attemp_discount:'0',
             cod_charges:          '0',
             advance_amount:       '0',
-            cod_amount:     String(totalAmount),
-            payment_mode:   'COD',
+            cod_amount:     isPrepaid ? '0' : String(totalAmount),
+            payment_mode:   isPrepaid ? 'Prepaid' : 'COD',
             reseller_name:  '',
             eway_bill_number: '',
             gst_number:     '',

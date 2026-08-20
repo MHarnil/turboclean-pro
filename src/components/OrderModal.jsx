@@ -30,12 +30,16 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle|loading|success|error
   const [orderData, setOrderData] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [paymentMode, setPaymentMode] = useState('PREPAID'); // 'PREPAID' | 'COD'
+  const [utrNumber, setUtrNumber]     = useState('');
+  const [upiCopied, setUpiCopied]     = useState(false);
 
   if (!isOpen) return null;
 
-  const total = price;
-  const qty = selectedPack;
+  const baseTotal       = price;
+  const prepaidDiscount = paymentMode === 'PREPAID' ? 100 : 0;
+  const total           = Math.max(0, baseTotal - prepaidDiscount);
+  const qty             = selectedPack;
 
   const change = (e) => {
     const { name, value } = e.target;
@@ -86,6 +90,9 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
           totalAmount: total,
           orderDate,
           deliveryDate: deliveryStr,
+          paymentMode,
+          utrNumber,
+          discountAmount: prepaidDiscount,
         }),
       });
 
@@ -94,7 +101,8 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
         orderId, orderDate, deliveryStr,
         awbNumber: result.awbNumber || '',
         name: form.fullName, phone: form.phone,
-        total, qty, city: form.city, state: form.state
+        total, qty, city: form.city, state: form.state,
+        paymentMode, utrNumber,
       });
       setStatus('success');
 
@@ -219,19 +227,91 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
             <div className="bg-red-50 text-red-500 p-3 rounded text-sm">Something went wrong. Please try again.</div>
           )}
 
-          <div className="border-t pt-4 mt-6">
-            <div className="flex justify-between text-gray-600 mb-2">
-              <span>Subtotal</span>
-              <span className="font-bold">Rs. {price}.00</span>
+          {/* Payment Mode Selector */}
+          <div className="border-t pt-4 mt-4 space-y-3">
+            <label className="block text-xs font-black text-gray-800 uppercase tracking-wider">Select Payment Method</label>
+            <div className="grid grid-cols-2 gap-2">
+              <div
+                onClick={() => setPaymentMode('PREPAID')}
+                className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-left ${
+                  paymentMode === 'PREPAID'
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-gray-200 bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900 mb-0.5">
+                  <input type="radio" checked={paymentMode === 'PREPAID'} onChange={() => setPaymentMode('PREPAID')} className="accent-emerald-500" />
+                  <span>💳 Online / UPI</span>
+                </div>
+                <span className="text-[10px] bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded">₹100 OFF</span>
+              </div>
+
+              <div
+                onClick={() => setPaymentMode('COD')}
+                className={`p-3 rounded-xl border-2 cursor-pointer transition-all text-left ${
+                  paymentMode === 'COD'
+                    ? 'border-amber-500 bg-amber-50'
+                    : 'border-gray-200 bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900 mb-0.5">
+                  <input type="radio" checked={paymentMode === 'COD'} onChange={() => setPaymentMode('COD')} className="accent-amber-500" />
+                  <span>🚚 Cash on Delivery</span>
+                </div>
+                <span className="text-[10px] text-gray-500 font-medium">Full Rs. {baseTotal}</span>
+              </div>
             </div>
-            <div className="flex justify-between text-gray-900 text-lg font-black mb-4">
+
+            {paymentMode === 'PREPAID' && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center space-y-2">
+                <p className="text-xs font-bold text-emerald-800">Scan QR Code to Pay Rs. {total} (Extra ₹100 OFF):</p>
+                <div className="bg-white p-2 rounded-lg w-36 h-36 mx-auto border border-emerald-300">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dstarlight6114%40okicici%26pn%3DTurboClean%2520Pro%26am%3D${total}%26cu%3DINR`}
+                    alt="UPI Payment QR Code"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-xs font-mono font-bold text-gray-700">starlight6114@okicici</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText('starlight6114@okicici');
+                      setUpiCopied(true);
+                      setTimeout(() => setUpiCopied(false), 2000);
+                    }}
+                    className="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded"
+                  >
+                    {upiCopied ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={utrNumber}
+                  onChange={(e) => setUtrNumber(e.target.value)}
+                  placeholder="Enter 12-digit UTR / Txn No. (Optional)"
+                  maxLength={12}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs"
+                />
+              </div>
+            )}
+
+            <div className="flex justify-between text-gray-900 text-lg font-black pt-2">
               <span>Total</span>
-              <span>Rs. {price}.00</span>
+              <span className={paymentMode === 'PREPAID' ? 'text-emerald-600' : 'text-gray-900'}>
+                Rs. {total}.00
+              </span>
             </div>
-            <button type="submit" disabled={status === 'loading'} className="btn-blue">
-              {status === 'loading' ? 'PROCESSING...' : `BUY IT NOW - Rs. ${price}.00`}
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className={`w-full py-4 text-base font-black rounded-xl text-white transition-all ${
+                paymentMode === 'PREPAID' ? 'bg-emerald-600 hover:bg-emerald-700' : 'btn-blue'
+              }`}
+            >
+              {status === 'loading' ? 'PROCESSING...' : `PLACE ORDER - Rs. ${total}.00`}
             </button>
-            <ReviewSnippets />
           </div>
         </form>
       </div>

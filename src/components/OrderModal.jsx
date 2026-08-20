@@ -275,11 +275,11 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
                 </div>
                 <p className="text-[11px] font-extrabold text-emerald-800">MALAVIYA HET SANJAYBHAI</p>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-xs font-mono font-bold text-gray-700">starlight6114@okicici</span>
+                  <span className="text-xs font-mono font-bold text-gray-700">8780772623@ibl</span>
                   <button
                     type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText('starlight6114@okicici');
+                      navigator.clipboard.writeText('8780772623@ibl');
                       setUpiCopied(true);
                       setTimeout(() => setUpiCopied(false), 2000);
                     }}

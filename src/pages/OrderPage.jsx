@@ -928,11 +928,11 @@ const OrderPage = () => {
 
                     {/* UPI ID Copy */}
                     <div className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl p-2 max-w-xs mx-auto">
-                      <span className="text-xs font-mono text-emerald-300 font-bold">starlight6114@okicici</span>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">8780772623@ibl</span>
                       <button
                         type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText('starlight6114@okicici');
+                          navigator.clipboard.writeText('8780772623@ibl');
                           setUpiCopied(true);
                           setTimeout(() => setUpiCopied(false), 2000);
                         }}

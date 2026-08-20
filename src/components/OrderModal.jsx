@@ -288,14 +288,19 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
                     {upiCopied ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
-                <input
-                  type="text"
-                  value={utrNumber}
-                  onChange={(e) => setUtrNumber(e.target.value)}
-                  placeholder="Enter 12-digit UTR / Txn No. (Optional)"
-                  maxLength={12}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs"
-                />
+                <div className="pt-2 text-left">
+                  <label className="block text-[11px] font-bold text-gray-700 mb-1">
+                    UPI Transaction ID / UTR (Optional):
+                  </label>
+                  <input
+                    type="text"
+                    value={utrNumber}
+                    onChange={(e) => setUtrNumber(e.target.value)}
+                    placeholder="Enter UTR / Transaction Ref No."
+                    maxLength={30}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-white text-gray-900 focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
               </div>
             )}
 

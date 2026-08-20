@@ -952,8 +952,8 @@ const OrderPage = () => {
                         type="text"
                         value={utrNumber}
                         onChange={(e) => setUtrNumber(e.target.value)}
-                        placeholder="Enter 12-digit UTR Ref No."
-                        maxLength={12}
+                        placeholder="Enter UTR / Transaction Ref No."
+                        maxLength={30}
                         className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-xs focus:outline-none focus:border-emerald-400"
                       />
                     </div>

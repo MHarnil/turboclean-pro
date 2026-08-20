@@ -176,12 +176,19 @@ const ProductPage = () => {
                 </div>
               </div>
 
+              {/* Prepaid & COD Offer Badge */}
+              <div className="text-center mb-2">
+                <span className="inline-block bg-[#53FF73] text-black text-xs font-black px-3 py-1 rounded-md shadow-sm border border-emerald-400 tracking-wide">
+                  ⚡ Extra ₹60 OFF on Prepaid (UPI) • COD Available
+                </span>
+              </div>
+
               {/* Order Now Button */}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="btn-primary py-4 text-lg rounded-xl mb-2 w-full flex items-center justify-center gap-2 bg-black hover:bg-gray-900 text-white font-bold shadow-lg"
+                className="btn-primary py-4 text-lg rounded-xl mb-3 w-full flex items-center justify-center gap-2 bg-black hover:bg-gray-900 text-white font-bold shadow-lg cursor-pointer"
               >
-                🛒 Order Now – Cash on Delivery
+                🛒 Order Now – Prepaid & Cash on Delivery
               </button>
 
               {/* Delivery Info */}

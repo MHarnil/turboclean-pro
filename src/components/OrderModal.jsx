@@ -266,13 +266,14 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
             {paymentMode === 'PREPAID' && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center space-y-2">
                 <p className="text-xs font-bold text-emerald-800">Scan Official PhonePe QR Code (Extra ₹60 OFF):</p>
-                <div className="bg-black p-1.5 rounded-xl w-40 sm:w-44 mx-auto border-2 border-purple-500 shadow-md overflow-hidden">
+                <div className="bg-white p-2 rounded-xl w-36 h-36 mx-auto border-2 border-emerald-400 shadow-md overflow-hidden flex items-center justify-center">
                   <img
                     src={phonepeQr}
-                    alt="Official PhonePe Payment QR Code"
-                    className="w-full h-auto object-contain rounded-lg"
+                    alt="Official PhonePe QR Code - MALAVIYA HET SANJAYBHAI"
+                    className="w-full h-full object-contain rounded-lg"
                   />
                 </div>
+                <p className="text-[11px] font-extrabold text-emerald-800">MALAVIYA HET SANJAYBHAI</p>
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-xs font-mono font-bold text-gray-700">starlight6114@okicici</span>
                   <button

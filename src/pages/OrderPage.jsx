@@ -916,14 +916,15 @@ const OrderPage = () => {
 
                     <p className="text-xs text-white/70 font-medium">Scan Official PhonePe QR Code to Pay Rs. {total}:</p>
 
-                    {/* Official PhonePe QR Code */}
-                    <div className="bg-black p-2 rounded-2xl w-48 sm:w-56 mx-auto flex flex-col items-center shadow-2xl border-2 border-purple-500/80 overflow-hidden">
+                    {/* Official PhonePe QR Code Square */}
+                    <div className="bg-white p-2 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-2xl border-2 border-emerald-400 overflow-hidden">
                       <img
                         src={phonepeQr}
-                        alt="Official PhonePe Payment QR Code - MALAVIYA HET SANJAYBHAI"
-                        className="w-full h-auto object-contain rounded-xl"
+                        alt="Official PhonePe QR Code - MALAVIYA HET SANJAYBHAI"
+                        className="w-full h-full object-contain rounded-xl"
                       />
                     </div>
+                    <p className="text-xs font-extrabold text-emerald-300">A/C Name: MALAVIYA HET SANJAYBHAI</p>
 
                     {/* UPI ID Copy */}
                     <div className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl p-2 max-w-xs mx-auto">

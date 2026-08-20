@@ -23,6 +23,7 @@ import imgBattery  from '../assets/img-battery.jpg';
 import imgFilter   from '../assets/img-filter.jpg';
 import imgCompare  from '../assets/img-comparison.jpg';
 import imgBlower   from '../assets/img-blower.jpg';
+import phonepeQr  from '../assets/phonepe-qr.png';
 import imgSize     from '../assets/img-features.jpg';
 
 
@@ -913,14 +914,14 @@ const OrderPage = () => {
                       <span>🎉 Extra ₹60 Prepaid Discount Applied!</span>
                     </div>
 
-                    <p className="text-xs text-white/70">Scan QR Code using any UPI App (GPay, PhonePe, Paytm, BHIM):</p>
+                    <p className="text-xs text-white/70 font-medium">Scan Official PhonePe QR Code to Pay Rs. {total}:</p>
 
-                    {/* QR Code */}
-                    <div className="bg-white p-3 rounded-2xl w-44 h-44 mx-auto flex items-center justify-center shadow-lg border-2 border-emerald-400">
+                    {/* Official PhonePe QR Code */}
+                    <div className="bg-black p-2 rounded-2xl w-48 sm:w-56 mx-auto flex flex-col items-center shadow-2xl border-2 border-purple-500/80 overflow-hidden">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dstarlight6114%40okicici%26pn%3DTurboClean%2520Pro%26am%3D${total}%26cu%3DINR`}
-                        alt="UPI Payment QR Code"
-                        className="w-full h-full object-contain"
+                        src={phonepeQr}
+                        alt="Official PhonePe Payment QR Code - MALAVIYA HET SANJAYBHAI"
+                        className="w-full h-auto object-contain rounded-xl"
                       />
                     </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FiX, FiCheckCircle, FiCopy } from 'react-icons/fi';
 import productImg from '../assets/product1.jpg';
+import phonepeQr from '../assets/phonepe-qr.png';
 import ReviewSnippets from './ReviewSnippets';
 
 const genOrderId = () => {
@@ -264,12 +265,12 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
 
             {paymentMode === 'PREPAID' && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center space-y-2">
-                <p className="text-xs font-bold text-emerald-800">Scan QR Code to Pay Rs. {total} (Extra ₹60 OFF):</p>
-                <div className="bg-white p-2 rounded-lg w-36 h-36 mx-auto border border-emerald-300">
+                <p className="text-xs font-bold text-emerald-800">Scan Official PhonePe QR Code (Extra ₹60 OFF):</p>
+                <div className="bg-black p-1.5 rounded-xl w-40 sm:w-44 mx-auto border-2 border-purple-500 shadow-md overflow-hidden">
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dstarlight6114%40okicici%26pn%3DTurboClean%2520Pro%26am%3D${total}%26cu%3DINR`}
-                    alt="UPI Payment QR Code"
-                    className="w-full h-full object-contain"
+                    src={phonepeQr}
+                    alt="Official PhonePe Payment QR Code"
+                    className="w-full h-auto object-contain rounded-lg"
                   />
                 </div>
                 <div className="flex items-center justify-center gap-2">

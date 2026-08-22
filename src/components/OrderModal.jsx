@@ -85,9 +85,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
           totalAmount: total,
           orderDate,
           deliveryDate: deliveryStr,
-          paymentMode,
-          utrNumber,
-          discountAmount: prepaidDiscount,
+          paymentMode: 'COD',
         }),
       });
 
@@ -97,7 +95,7 @@ const OrderModal = ({ isOpen, onClose, selectedPack, price }) => {
         awbNumber: result.awbNumber || '',
         name: form.fullName, phone: form.phone,
         total, qty, city: form.city, state: form.state,
-        paymentMode, utrNumber,
+        paymentMode: 'COD',
       });
       setStatus('success');
 

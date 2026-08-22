@@ -147,9 +147,7 @@ const OrderPage = () => {
           totalAmount:  total,
           orderDate,
           deliveryDate: deliveryStr,
-          paymentMode,
-          utrNumber,
-          discountAmount: prepaidDiscount,
+          paymentMode:  'COD',
         }),
       });
 
@@ -163,7 +161,7 @@ const OrderPage = () => {
         awbNumber, iThinkCreated,
         name:  form.fullName, phone: form.phone,
         email: form.email,   qty,   total,
-        paymentMode, utrNumber,
+        paymentMode: 'COD',
         city:  form.city, state: form.state, pincode: form.pincode,
       });
       setStatus('success');

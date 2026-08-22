@@ -110,7 +110,6 @@ export default async function handler(req, res) {
           </div>
         </div>
       </div>
-    </div>`;
       <div style="padding:20px;text-align:center;background:#f1f5f9;">
         <p style="margin:0;font-size:13px;color:#64748b;">Koi problem? Email karo: <a href="mailto:${GMAIL_USER}" style="color:#2563eb;">${GMAIL_USER}</a></p>
         <p style="margin:8px 0 0;font-size:11px;color:#94a3b8;">TurboClean Pro • turboclean.ruup.in</p>
